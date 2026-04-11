@@ -1,0 +1,147 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id               String         @id @default(cuid())
+  username         String         @unique
+  passwordHash     String
+  active           Boolean        @default(true)
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+
+  priceHistories   PriceHistory[]
+  sales            Sale[]         @relation("SaleUser")
+  canceledSales    Sale[]         @relation("SaleCancelledBy")
+  stockMovements   StockMovement[]
+}
+
+model Product {
+  id        String    @id @default(cuid())
+  name      String    @unique
+  active    Boolean   @default(true)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  variants  Variant[]
+}
+
+model Variant {
+  id           String   @id @default(cuid())
+  productId    String
+  name         String
+  currentPrice Decimal  @db.Decimal(10, 2)
+  currentStock Int      @default(0)
+  minimumStock Int      @default(0)
+  active       Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  product        Product         @relation(fields: [productId], references: [id])
+  priceHistories PriceHistory[]
+  saleLines      SaleLine[]
+  stockMovements StockMovement[]
+
+  @@unique([productId, name])
+}
+
+model PriceHistory {
+  id            String   @id @default(cuid())
+  variantId     String
+  previousPrice Decimal
+  newPrice      Decimal
+  userId        String
+  createdAt     DateTime @default(now())
+
+  variant Variant @relation(fields: [variantId], references: [id])
+  user    User    @relation(fields: [userId], references: [id])
+}
+
+enum SaleStatus {
+  ACTIVE
+  CANCELLED
+}
+
+model Sale {
+  id                 String     @id @default(cuid())
+  userId             String
+  status             SaleStatus @default(ACTIVE)
+  cancellationReason String?
+  cancellationDate   DateTime?
+  cancelledByUserId  String?
+  date               DateTime
+  createdAt          DateTime   @default(now())
+
+  user             User       @relation("SaleUser", fields: [userId], references: [id])
+  cancelledByUser  User?      @relation("SaleCancelledBy", fields: [cancelledByUserId], references: [id])
+  saleLines        SaleLine[]
+}
+
+model SaleLine {
+  id         String  @id @default(cuid())
+  saleId     String
+  variantId  String
+  quantity   Int
+  unitPrice  Decimal @db.Decimal(10, 2)
+
+  sale    Sale    @relation(fields: [saleId], references: [id])
+  variant Variant @relation(fields: [variantId], references: [id])
+}
+
+enum StockMovementType {
+  IN
+  OUT
+  ADJUSTMENT
+  LOSS
+}
+
+enum ReferenceType {
+  SALE
+  SALE_CANCELLATION
+}
+
+model StockMovement {
+  id            String            @id @default(cuid())
+  variantId     String
+  type          StockMovementType
+  quantity      Int
+  reason        String?
+  referenceId   String?
+  referenceType ReferenceType?
+  userId        String
+  createdAt     DateTime          @default(now())
+
+  variant Variant @relation(fields: [variantId], references: [id])
+  user    User    @relation(fields: [userId], references: [id])
+}
+
+enum AuditAction {
+  CREATE
+  UPDATE
+  DELETE
+}
+
+model AuditLog {
+  id            String      @id @default(cuid())
+  entity        String
+  entityId      String
+  action        AuditAction
+  field         String?
+  previousValue String?
+  newValue      String?
+  userId        String
+  timestamp     DateTime
+}
+
+model AuthLog {
+  id         String   @id @default(cuid())
+  username   String
+  successful Boolean
+  ip         String
+  timestamp  DateTime
+}
