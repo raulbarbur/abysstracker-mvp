@@ -1,5 +1,5 @@
 import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
+import { SignJWT, jwtVerify } from 'jose';
 
 const SALT_ROUNDS = 10;
 
@@ -11,21 +11,25 @@ export async function verifyPassword(password: string, hash: string): Promise<bo
   return bcrypt.compare(password, hash);
 }
 
-export function generateJWT(payload: { userId: string; username: string }): string {
+export async function generateJWT(payload: { userId: string; username: string }): Promise<string> {
   const secret = process.env.JWT_SECRET;
   if (!secret) {
     throw new Error("JWT_SECRET no definido");
   }
-  return jwt.sign(payload, secret, { expiresIn: '8h' });
+  const secretKey = new TextEncoder().encode(secret);
+  return new SignJWT(payload)
+    .setProtectedHeader({ alg: 'HS256' })
+    .setExpirationTime('8h')
+    .sign(secretKey);
 }
 
-export function verifyJWT(token: string): { userId: string; username: string } | null {
+export async function verifyJWT(token: string): Promise<{ userId: string; username: string } | null> {
   const secret = process.env.JWT_SECRET;
-  if (!secret) {
-    return null;
-  }
+  if (!secret) return null;
   try {
-    return jwt.verify(token, secret) as { userId: string; username: string };
+    const secretKey = new TextEncoder().encode(secret);
+    const { payload } = await jwtVerify(token, secretKey);
+    return payload as unknown as { userId: string; username: string };
   } catch (error) {
     return null;
   }
