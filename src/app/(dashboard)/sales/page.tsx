@@ -56,7 +56,7 @@ export default function SalesPage() {
       const dataStock = await resStock.json();
 
       setSales(dataSales.sales || []);
-      setVariants((dataStock.stock || []).filter((v: any) => v.currentStock > 0)); // Only stock > 0
+      setVariants((dataStock.stock || []).filter((v: Variant) => v.currentStock > 0)); // Only stock > 0
     } catch (e) {
       console.error(e);
     } finally {

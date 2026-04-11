@@ -33,7 +33,7 @@ export async function GET(request: NextRequest) {
     }));
 
     return NextResponse.json({ stock }, { status: 200 });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: "Ocurrió un error en el servidor" }, { status: 500 });
   }
 }

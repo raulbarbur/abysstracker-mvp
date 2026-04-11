@@ -10,7 +10,7 @@ export async function middleware(request: NextRequest) {
     if (!token || !(await verifyJWT(token))) {
       return NextResponse.json({ error: 'No autenticado' }, { status: 401 })
     }
-  } catch (e) {
+  } catch {
     return NextResponse.json({ error: 'No autenticado' }, { status: 401 })
   }
   
