@@ -1,0 +1,96 @@
+import { NextRequest, NextResponse } from 'next/server';
+import { prisma } from '@/lib/prisma';
+import { getAuthUser } from '@/lib/auth-middleware';
+
+export async function GET(request: NextRequest) {
+  try {
+    const authUser = await getAuthUser(request);
+    if (!authUser) return NextResponse.json({ error: "No autorizado" }, { status: 401 });
+
+    const startOfDay = new Date();
+    startOfDay.setUTCHours(0, 0, 0, 0);
+    const endOfDay = new Date();
+    endOfDay.setUTCHours(23, 59, 59, 999);
+
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
+    const [salesTodayData, topVariantsRaw, latestMovementsData, lowStockAlertsRaw] = await Promise.all([
+      // a) salesToday
+      prisma.sale.findMany({
+        where: { status: 'ACTIVE', date: { gte: startOfDay, lte: endOfDay } },
+        include: { saleLines: true }
+      }),
+      // b) topVariants
+      prisma.$queryRaw<{variantId: string; variantName: string; productName: string; totalQuantitySold: unknown}[]>`
+        SELECT v.id as "variantId", v.name as "variantName", p.name as "productName", SUM(sl.quantity) as "totalQuantitySold"
+        FROM "SaleLine" sl
+        JOIN "Sale" s ON s.id = sl."saleId"
+        JOIN "Variant" v ON v.id = sl."variantId"
+        JOIN "Product" p ON p.id = v."productId"
+        WHERE s.status = 'ACTIVE' AND s.date >= ${sevenDaysAgo}
+        GROUP BY v.id, v.name, p.name
+        ORDER BY "totalQuantitySold" DESC
+        LIMIT 5
+      `,
+      // c) latestMovements
+      prisma.stockMovement.findMany({
+        orderBy: { createdAt: 'desc' },
+        take: 5,
+        include: { variant: true, user: true }
+      }),
+      // d) lowStockAlerts
+      prisma.$queryRaw<{variantId: string; variantName: string; productName: string; currentStock: unknown; minimumStock: unknown}[]>`
+        SELECT v.id as "variantId", v.name as "variantName", p.name as "productName", v."currentStock" as "currentStock", v."minimumStock" as "minimumStock"
+        FROM "Variant" v
+        JOIN "Product" p ON p.id = v."productId"
+        WHERE v."minimumStock" > 0 AND v."currentStock" < v."minimumStock"
+        ORDER BY (v."currentStock" - v."minimumStock") ASC
+        LIMIT 10
+      `
+    ]);
+
+    let totalAmount = 0;
+    salesTodayData.forEach((sale: { saleLines: { unitPrice: NonNullable<unknown>, quantity: number }[] }) => {
+      sale.saleLines.forEach((line: { unitPrice: NonNullable<unknown>, quantity: number }) => {
+        totalAmount += Number(line.unitPrice) * line.quantity;
+      });
+    });
+
+    const salesToday = { count: salesTodayData.length, totalAmount };
+
+    const topVariants = topVariantsRaw.map((r: { variantId: string; variantName: string; productName: string; totalQuantitySold: unknown }) => ({
+      variantId: r.variantId,
+      variantName: r.variantName,
+      productName: r.productName,
+      totalQuantitySold: Number(r.totalQuantitySold)
+    }));
+
+    const latestMovements = latestMovementsData.map((m: { id: string; type: string; quantity: number; variant: { name: string }; user: { username: string }; createdAt: Date }) => ({
+      id: m.id,
+      type: m.type,
+      quantity: m.quantity,
+      variantName: m.variant.name,
+      username: m.user.username,
+      createdAt: m.createdAt
+    }));
+
+    const lowStockAlerts = lowStockAlertsRaw.map((r: { variantId: string; variantName: string; productName: string; currentStock: unknown; minimumStock: unknown }) => ({
+      variantId: r.variantId,
+      variantName: r.variantName,
+      productName: r.productName,
+      currentStock: Number(r.currentStock),
+      minimumStock: Number(r.minimumStock)
+    }));
+
+    return NextResponse.json({
+      salesToday,
+      topVariants,
+      latestMovements,
+      lowStockAlerts
+    }, { status: 200 });
+
+  } catch (error) {
+    return NextResponse.json({ error: "Ocurrió un error en el servidor" }, { status: 500 });
+  }
+}

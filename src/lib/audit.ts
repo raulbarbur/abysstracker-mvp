@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 
-type PrismaInstance = Omit<PrismaClient, "$connect" | "$disconnect" | "$on" | "$transaction" | "$use" | "$extends"> | any;
+export type PrismaInstance = Omit<PrismaClient, "$connect" | "$disconnect" | "$on" | "$transaction" | "$use" | "$extends">;
 
 export async function createAuditLog(
   prisma: PrismaInstance,

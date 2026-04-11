@@ -44,7 +44,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Credenciales inválidas" }, { status: 401 });
     }
 
-    const token = generateJWT({ userId: user.id, username: user.username });
+    const token = await generateJWT({ userId: user.id, username: user.username });
 
     await prisma.authLog.create({
       data: { username, successful: true, ip, timestamp: new Date() },
