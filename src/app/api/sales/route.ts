@@ -21,7 +21,7 @@ export async function POST(request: NextRequest) {
     let body;
     try {
       body = await request.json();
-    } catch (e) {
+    } catch {
       return NextResponse.json({ error: "Cuerpo de solicitud inválido" }, { status: 400 });
     }
 
@@ -141,7 +141,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ sale: fullSale, lines: fullSale?.saleLines }, { status: 201 });
 
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: "Ocurrió un error en el servidor" }, { status: 500 });
   }
 }
@@ -197,7 +197,7 @@ export async function GET(request: NextRequest) {
     const mappedSales = sales.map(s => ({ ...s, lines: s.saleLines }));
 
     return NextResponse.json({ sales: mappedSales }, { status: 200 });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: "Ocurrió un error en el servidor" }, { status: 500 });
   }
 }

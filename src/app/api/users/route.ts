@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { prisma } from '@/lib/prisma';
 import { getAuthUser } from '@/lib/auth-middleware';
-import { hashPassword } from '@/lib/auth';
+import { hashPassword } from '@/lib/passwords';
 import { createAuditLog } from '@/lib/audit';
 
 const createUserSchema = z.object({
@@ -28,7 +28,7 @@ export async function GET(request: NextRequest) {
     });
 
     return NextResponse.json({ users }, { status: 200 });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: "Ocurrió un error en el servidor" }, { status: 500 });
   }
 }
@@ -41,7 +41,7 @@ export async function POST(request: NextRequest) {
     let body;
     try {
       body = await request.json();
-    } catch (e) {
+    } catch {
       return NextResponse.json({ error: "Cuerpo de solicitud inválido" }, { status: 400 });
     }
 
@@ -74,9 +74,10 @@ export async function POST(request: NextRequest) {
       userId: authUser.userId
     });
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { passwordHash: _, ...safeUser } = newUser;
     return NextResponse.json(safeUser, { status: 201 });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: "Ocurrió un error en el servidor" }, { status: 500 });
   }
 }

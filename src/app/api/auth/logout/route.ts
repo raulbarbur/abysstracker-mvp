@@ -14,7 +14,7 @@ export async function POST(request: NextRequest) {
     response.cookies.delete('auth-token');
     
     return response;
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: "Ocurrió un error en el servidor" }, { status: 500 });
   }
 }

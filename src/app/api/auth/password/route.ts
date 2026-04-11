@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { prisma } from '@/lib/prisma';
 import { getAuthUser } from '@/lib/auth-middleware';
-import { verifyPassword, hashPassword } from '@/lib/auth';
+import { verifyPassword, hashPassword } from '@/lib/passwords';
 import { createAuditLog } from '@/lib/audit';
 
 const passwordSchema = z.object({
@@ -23,7 +23,7 @@ export async function PUT(request: NextRequest) {
     try {
       const bodyText = await request.text();
       body = JSON.parse(bodyText);
-    } catch (e) {
+    } catch {
       return NextResponse.json({ error: "Cuerpo de solicitud inválido" }, { status: 400 });
     }
 
@@ -73,7 +73,7 @@ export async function PUT(request: NextRequest) {
     });
 
     return NextResponse.json({ message: "Contraseña actualizada" }, { status: 200 });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: "Ocurrió un error en el servidor" }, { status: 500 });
   }
 }

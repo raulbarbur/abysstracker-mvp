@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { prisma } from '@/lib/prisma';
-import { verifyPassword, generateJWT } from '@/lib/auth';
+import { generateJWT } from '@/lib/auth';
+import { verifyPassword } from '@/lib/passwords';
 
 const loginSchema = z.object({
   username: z.string().min(1, "El nombre de usuario es requerido"),
@@ -67,7 +68,7 @@ export async function POST(request: NextRequest) {
     });
 
     return response;
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: "Ocurrió un error en el servidor" }, { status: 500 });
   }
 }

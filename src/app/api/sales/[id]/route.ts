@@ -12,7 +12,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
     const sale = await prisma.sale.findUnique({
       where: { id },
       include: {
-        lines: {
+        saleLines: {
           include: {
             variant: {
               include: { product: true }
@@ -28,7 +28,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
     }
 
     return NextResponse.json({ sale }, { status: 200 });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: "Ocurrió un error en el servidor" }, { status: 500 });
   }
 }

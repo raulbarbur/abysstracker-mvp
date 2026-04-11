@@ -18,7 +18,7 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
     let body;
     try {
       body = await request.json();
-    } catch (e) {
+    } catch {
       return NextResponse.json({ error: "Cuerpo de solicitud inválido" }, { status: 400 });
     }
 
@@ -94,11 +94,11 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
 
       return NextResponse.json({ sale: resultSale }, { status: 200 });
 
-    } catch (e) {
+    } catch {
       return NextResponse.json({ error: "Conflicto de stock, intente nuevamente" }, { status: 409 });
     }
 
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: "Ocurrió un error en el servidor" }, { status: 500 });
   }
 }

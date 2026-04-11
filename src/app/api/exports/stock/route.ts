@@ -18,7 +18,7 @@ export async function GET(request: NextRequest) {
         'Content-Disposition': 'attachment; filename="stock.xlsx"',
       }
     });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: "Ocurrió un error en el servidor" }, { status: 500 });
   }
 }

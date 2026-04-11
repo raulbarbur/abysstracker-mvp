@@ -2,7 +2,7 @@ import { prisma } from '@/lib/prisma';
 import * as XLSX from 'xlsx';
 
 export async function generateSalesExport(filters: { dateFrom?: string; dateTo?: string; userId?: string; productId?: string }) {
-  const where: { date?: { gte?: Date; lte?: Date }; userId?: string; lines?: { some: { variant: { productId: string } } } } = {};
+  const where: { date?: { gte?: Date; lte?: Date }; userId?: string; saleLines?: { some: { variant: { productId: string } } } } = {};
   if (filters.dateFrom || filters.dateTo) {
     where.date = {};
     if (filters.dateFrom) where.date.gte = new Date(filters.dateFrom);
@@ -10,14 +10,14 @@ export async function generateSalesExport(filters: { dateFrom?: string; dateTo?:
   }
   if (filters.userId) where.userId = filters.userId;
   if (filters.productId) {
-    where.lines = { some: { variant: { productId: filters.productId } } };
+    where.saleLines = { some: { variant: { productId: filters.productId } } };
   }
 
   const sales = await prisma.sale.findMany({
     where,
     include: {
       user: true,
-      lines: { include: { variant: { include: { product: true } } } }
+      saleLines: { include: { variant: { include: { product: true } } } }
     },
     orderBy: { date: 'desc' },
     take: 10000
@@ -25,7 +25,7 @@ export async function generateSalesExport(filters: { dateFrom?: string; dateTo?:
 
   const rows: Record<string, string | number>[] = [];
   sales.forEach(sale => {
-    sale.lines.forEach(line => {
+    sale.saleLines.forEach(line => {
       rows.push({
         'ID Venta': sale.id,
         'Fecha': sale.date.toISOString(),

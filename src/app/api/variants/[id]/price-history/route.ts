@@ -18,7 +18,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
     });
 
     return NextResponse.json({ history }, { status: 200 });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: "Ocurrió un error en el servidor" }, { status: 500 });
   }
 }
