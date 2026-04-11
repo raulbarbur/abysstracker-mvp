@@ -10,12 +10,12 @@ const createVariantSchema = z.object({
   minimumStock: z.number().int().min(0, "El stock mínimo debe ser 0 o mayor").optional().default(0),
 });
 
-export async function POST(request: NextRequest, { params }: { params: { productId: string } }) {
+export async function POST(request: NextRequest, { params }: { params: { id: string } }) {
   try {
     const authUser = await getAuthUser(request);
     if (!authUser) return NextResponse.json({ error: "No autorizado" }, { status: 401 });
 
-    const productId = params.productId;
+    const productId = params.id;
 
     let body;
     try {

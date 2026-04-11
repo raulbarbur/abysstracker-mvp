@@ -28,7 +28,8 @@ export async function GET(request: NextRequest) {
       variantName: v.name,
       productName: v.product.name,
       currentStock: v.currentStock,
-      minimumStock: v.minimumStock
+      minimumStock: v.minimumStock,
+      currentPrice: Number(v.currentPrice)
     }));
 
     return NextResponse.json({ stock }, { status: 200 });

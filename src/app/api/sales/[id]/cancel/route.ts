@@ -31,7 +31,7 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
 
     const sale = await prisma.sale.findUnique({
       where: { id },
-      include: { lines: true }
+      include: { saleLines: true }
     });
 
     if (!sale) {
@@ -44,7 +44,7 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
 
     try {
       const resultSale = await prisma.$transaction(async (tx: PrismaInstance) => {
-        const uniqueVariantIds = Array.from(new Set(sale.lines.map((l: { variantId: string }) => l.variantId))).sort();
+        const uniqueVariantIds = Array.from(new Set(sale.saleLines.map((l: { variantId: string }) => l.variantId))).sort();
 
         // Safe locks iteration
         for (const vId of uniqueVariantIds) {
@@ -61,7 +61,7 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
           }
         });
 
-        for (const line of sale.lines) {
+        for (const line of sale.saleLines) {
           await tx.stockMovement.create({
             data: {
               variantId: line.variantId,

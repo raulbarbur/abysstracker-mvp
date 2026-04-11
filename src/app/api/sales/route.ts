@@ -136,10 +136,10 @@ export async function POST(request: NextRequest) {
 
     const fullSale = await prisma.sale.findUnique({
       where: { id: transactionResult.id },
-      include: { lines: true }
+      include: { saleLines: true }
     });
 
-    return NextResponse.json({ sale: fullSale, lines: fullSale?.lines }, { status: 201 });
+    return NextResponse.json({ sale: fullSale, lines: fullSale?.saleLines }, { status: 201 });
 
   } catch (error) {
     return NextResponse.json({ error: "Ocurrió un error en el servidor" }, { status: 500 });
@@ -179,16 +179,24 @@ export async function GET(request: NextRequest) {
       where: whereClause,
       orderBy: { date: 'desc' },
       include: {
-        lines: {
+        saleLines: {
           include: {
-            variant: { select: { name: true, currentPrice: true } }
+            variant: { 
+              select: { 
+                name: true, 
+                currentPrice: true,
+                product: { select: { name: true } }
+              } 
+            }
           }
         },
         user: { select: { username: true } }
       }
     });
 
-    return NextResponse.json({ sales }, { status: 200 });
+    const mappedSales = sales.map(s => ({ ...s, lines: s.saleLines }));
+
+    return NextResponse.json({ sales: mappedSales }, { status: 200 });
   } catch (error) {
     return NextResponse.json({ error: "Ocurrió un error en el servidor" }, { status: 500 });
   }
