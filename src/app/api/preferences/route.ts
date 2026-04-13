@@ -8,7 +8,7 @@ export const dynamic = 'force-dynamic';
 
 export async function GET(req: NextRequest) {
   try {
-    const token = req.cookies.get("auth_token")?.value;
+    const token = req.cookies.get("auth-token")?.value;
     if (!token) {
       return NextResponse.json({ error: "No autorizado" }, { status: 401 });
     }
@@ -27,7 +27,7 @@ export async function GET(req: NextRequest) {
 
 export async function PATCH(req: NextRequest) {
   try {
-    const token = req.cookies.get("auth_token")?.value;
+    const token = req.cookies.get("auth-token")?.value;
     if (!token) {
       return NextResponse.json({ error: "No autorizado" }, { status: 401 });
     }
