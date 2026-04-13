@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { Download, ArrowRightLeft } from "lucide-react";
 
 interface StockVariant {
   variantId: string;
@@ -88,11 +89,11 @@ export default function StockPage() {
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-black text-white tracking-tight">Inventario de Stock</h1>
         <div className="flex items-center gap-3">
-          <button onClick={handleDownloadStock} className="px-5 py-2.5 bg-gray-800/80 hover:bg-gray-700 border border-gray-700 text-white font-bold rounded-xl text-sm transition-all shadow-inner">
-            📥 Exportar Stock
+          <button onClick={handleDownloadStock} className="px-5 py-2.5 bg-gray-800/80 hover:bg-gray-700 border border-gray-700 text-white font-bold rounded-xl text-sm transition-all shadow-inner flex items-center gap-2">
+            <Download className="w-4 h-4" /> Exportar Stock
           </button>
           <button onClick={() => setIsMoveModalOpen(true)} className="px-5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl shadow-[0_0_15px_rgba(37,99,235,0.3)] transition-all flex items-center gap-2">
-            <span>⇄</span> Registrar movimiento
+            <ArrowRightLeft className="w-4 h-4" /> Registrar movimiento
           </button>
         </div>
       </div>
@@ -145,8 +146,8 @@ export default function StockPage() {
         <div className="bg-gray-900/60 border border-gray-800/80 rounded-2xl overflow-hidden backdrop-blur-md shadow-2xl flex flex-col max-h-[800px]">
           <div className="p-6 border-b border-gray-800/80 flex items-center justify-between bg-black/40">
             <h3 className="font-bold text-gray-100 text-lg tracking-wide">Historial Transaccional</h3>
-            <button onClick={handleDownloadMovements} className="text-xs font-bold text-blue-400 hover:text-white px-4 py-2 hover:bg-blue-600/30 bg-blue-600/10 border border-blue-500/20 rounded-lg transition-all shadow-inner">
-              📥 Exportar
+            <button onClick={handleDownloadMovements} className="text-xs font-bold text-blue-400 hover:text-white px-4 py-2 hover:bg-blue-600/30 bg-blue-600/10 border border-blue-500/20 rounded-lg transition-all shadow-inner flex items-center gap-1">
+              <Download className="w-3.5 h-3.5" /> Exportar
             </button>
           </div>
           <div className="overflow-x-auto flex-1 h-full custom-scrollbar">
@@ -205,7 +206,7 @@ export default function StockPage() {
                 <select value={moveForm.variantId} onChange={e => setMoveForm({...moveForm, variantId: e.target.value})} required className="w-full px-4 py-3 bg-gray-950 border border-gray-800 rounded-xl text-gray-200 font-medium focus:outline-none focus:border-blue-500 shadow-inner">
                   <option value="" disabled>Localiza la Variante...</option>
                   {stock.map(s => (
-                    <option key={s.variantId} value={s.variantId}>{s.productName} ➔ {s.variantName}</option>
+                    <option key={s.variantId} value={s.variantId}>{s.productName} - {s.variantName}</option>
                   ))}
                 </select>
               </div>

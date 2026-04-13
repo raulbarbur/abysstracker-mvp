@@ -12,14 +12,23 @@ export async function GET(request: NextRequest) {
     const endOfDay = new Date();
     endOfDay.setUTCHours(23, 59, 59, 999);
 
+    const startOfMonth = new Date();
+    startOfMonth.setUTCDate(1);
+    startOfMonth.setUTCHours(0, 0, 0, 0);
+
     const sevenDaysAgo = new Date();
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
 
-    const [salesTodayData, topVariantsRaw, latestMovementsData, lowStockAlertsRaw] = await Promise.all([
+    const [salesTodayData, monthlySalesData, topVariantsRaw, latestMovementsData, lowStockAlertsRaw] = await Promise.all([
       // a) salesToday
       prisma.sale.findMany({
         where: { status: 'ACTIVE', date: { gte: startOfDay, lte: endOfDay } },
         include: { saleLines: true }
+      }),
+      // a.2) monthlySales
+      prisma.sale.findMany({
+        where: { status: 'ACTIVE', date: { gte: startOfMonth, lte: endOfDay } },
+        include: { saleLines: { include: { variant: true } } }
       }),
       // b) topVariants
       prisma.$queryRaw<{variantId: string; variantName: string; productName: string; totalQuantitySold: unknown}[]>`
@@ -56,8 +65,24 @@ export async function GET(request: NextRequest) {
         totalAmount += Number(line.unitPrice) * line.quantity;
       });
     });
-
     const salesToday = { count: salesTodayData.length, totalAmount };
+
+    let monthlyRevenue = 0;
+    let monthlyCost = 0;
+    monthlySalesData.forEach(sale => {
+      sale.saleLines.forEach(line => {
+        const qty = line.quantity;
+        const price = Number(line.unitPrice);
+        const cost = Number(line.variant.costPrice);
+        monthlyRevenue += price * qty;
+        monthlyCost += cost * qty;
+      });
+    });
+    const monthlyStats = {
+      revenue: monthlyRevenue,
+      profit: monthlyRevenue - monthlyCost,
+      count: monthlySalesData.length
+    };
 
     const topVariants = topVariantsRaw.map((r: { variantId: string; variantName: string; productName: string; totalQuantitySold: unknown }) => ({
       variantId: r.variantId,
@@ -85,6 +110,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({
       salesToday,
+      monthlyStats,
       topVariants,
       latestMovements,
       lowStockAlerts

@@ -3,6 +3,34 @@ import { z } from 'zod';
 import { prisma } from '@/lib/prisma';
 import { getAuthUser } from '@/lib/auth-middleware';
 import { createAuditLog, PrismaInstance } from '@/lib/audit';
+import { generateInvoicePDF } from '@/lib/pdf/invoice';
+import { Variant, Product } from '@prisma/client';
+
+async function generateInvoiceNumber(tx: PrismaInstance, date: Date): Promise<string> {
+  const startOfDay = new Date(date);
+  startOfDay.setHours(0, 0, 0, 0);
+  
+  const endOfDay = new Date(date);
+  endOfDay.setHours(23, 59, 59, 999);
+
+  const count = await tx.invoice.count({
+    where: {
+      createdAt: {
+        gte: startOfDay,
+        lte: endOfDay
+      }
+    }
+  });
+
+  const nextNumber = count + 1;
+  const sequence = String(nextNumber).padStart(5, '0');
+  
+  const yyyy = date.getFullYear();
+  const mm = String(date.getMonth() + 1).padStart(2, '0');
+  const dd = String(date.getDate()).padStart(2, '0');
+
+  return `F-${yyyy}${mm}${dd}-${sequence}`;
+}
 
 const saleLineSchema = z.object({
   variantId: z.string().min(1),
@@ -32,16 +60,19 @@ export async function POST(request: NextRequest) {
 
     const { lines } = parsed.data;
 
+    const user = await prisma.user.findUnique({ where: { id: authUser.userId } });
+    if (!user) return NextResponse.json({ error: "Usuario no encontrado" }, { status: 404 });
+
     let transactionResult;
     try {
       transactionResult = await prisma.$transaction(async (tx: PrismaInstance) => {
         const uniqueVariantIds = Array.from(new Set(lines.map(l => l.variantId))).sort();
 
-        const lockedVariants = [];
+        const lockedVariants: (Variant & { product: Product })[] = [];
 
         for (const vId of uniqueVariantIds) {
-          // 1. Lock Row
-          await tx.$queryRaw`SELECT 1 FROM "Variant" WHERE id = ${vId} FOR UPDATE`;
+          // Native retrieval, Prisma handles isolation in explicit transaction
+
           
           const variant = await tx.variant.findUnique({
             where: { id: vId },
@@ -103,6 +134,7 @@ export async function POST(request: NextRequest) {
               variantId: line.variantId,
               type: 'OUT',
               quantity: line.quantity,
+              reason: 'Venta',
               referenceId: newSale.id,
               referenceType: 'SALE',
               userId: authUser.userId
@@ -115,7 +147,54 @@ export async function POST(request: NextRequest) {
           });
         }
 
-        return newSale;
+        // 10. Generate Invoice
+        const invoiceLines = lines.map(line => {
+          const varDb = lockedVariants.find(v => v.id === line.variantId)!;
+          return {
+            quantity: line.quantity,
+            unitPrice: varDb.currentPrice,
+            variant: {
+              name: varDb.name,
+              product: { name: varDb.product.name }
+            }
+          };
+        });
+
+        const invoiceNumber = await generateInvoiceNumber(tx, newSale.date);
+        
+        const pdfBytes = await generateInvoicePDF({
+          invoiceNumber,
+          date: newSale.date,
+          userUsername: user.username,
+          lines: invoiceLines.map(l => ({
+            productName: l.variant.product.name,
+            variantName: l.variant.name,
+            quantity: l.quantity,
+            unitPrice: Number(l.unitPrice)
+          }))
+        });
+
+        const newInvoice = await tx.invoice.create({
+          data: {
+            saleId: newSale.id,
+            invoiceNumber,
+            pdfData: Buffer.from(pdfBytes)
+          }
+        });
+
+        // Add Audit for Invoice
+        await createAuditLog(tx, {
+          entity: "Invoice",
+          entityId: newInvoice.id,
+          action: "CREATE",
+          userId: authUser.userId
+        });
+
+        return {
+          newSale,
+          invoiceId: newInvoice.id,
+          invoiceNumber: newInvoice.invoiceNumber
+        };
       });
     } catch (e: unknown) {
       if (e && typeof e === 'object' && 'type' in e) {
@@ -124,22 +203,33 @@ export async function POST(request: NextRequest) {
         if (err.type === 'PRODUCT_INACTIVE') return NextResponse.json({ error: `El producto de la variante ${err.name} está inactivo` }, { status: 400 });
         if (err.type === 'INSUFFICIENT_STOCK') return NextResponse.json({ error: `Stock insuficiente para ${err.name}` }, { status: 400 });
       }
-      return NextResponse.json({ error: "Conflicto de stock, intente nuevamente" }, { status: 409 });
+      console.error("[Sales API Error]:", e);
+      let errMsg = "Error interno de servidor o base de datos.";
+      if (e instanceof Error) errMsg = e.message;
+      else if (typeof e === 'string') errMsg = e;
+      return NextResponse.json({ error: `Fallo al procesar: ${errMsg}` }, { status: 409 });
     }
 
     await createAuditLog(prisma, {
       entity: "Sale",
-      entityId: transactionResult.id,
+      entityId: transactionResult.newSale.id,
       action: "CREATE",
       userId: authUser.userId
     });
 
     const fullSale = await prisma.sale.findUnique({
-      where: { id: transactionResult.id },
+      where: { id: transactionResult.newSale.id },
       include: { saleLines: true }
     });
 
-    return NextResponse.json({ sale: fullSale, lines: fullSale?.saleLines }, { status: 201 });
+    return NextResponse.json({ 
+      sale: fullSale, 
+      lines: fullSale?.saleLines,
+      invoice: {
+        id: transactionResult.invoiceId,
+        invoiceNumber: transactionResult.invoiceNumber
+      }
+    }, { status: 201 });
 
   } catch {
     return NextResponse.json({ error: "Ocurrió un error en el servidor" }, { status: 500 });
@@ -190,7 +280,9 @@ export async function GET(request: NextRequest) {
             }
           }
         },
-        user: { select: { username: true } }
+        user: { select: { username: true } },
+        cancelledByUser: { select: { username: true } },
+        invoice: { select: { id: true, invoiceNumber: true } }
       }
     });
 

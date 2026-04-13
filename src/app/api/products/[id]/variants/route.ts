@@ -6,6 +6,7 @@ import { createAuditLog } from '@/lib/audit';
 
 const createVariantSchema = z.object({
   name: z.string().min(1, "El nombre es requerido").max(100, "Máximo 100 caracteres"),
+  costPrice: z.number().min(0, "El coste debe ser mayor o igual a 0").optional().default(0),
   currentPrice: z.number().gt(0, "El precio debe ser mayor a 0"),
   minimumStock: z.number().int().min(0, "El stock mínimo debe ser 0 o mayor").optional().default(0),
 });
@@ -29,7 +30,7 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
       return NextResponse.json({ error: parsed.error.issues[0]?.message || "Datos inválidos" }, { status: 400 });
     }
 
-    const { name, currentPrice, minimumStock } = parsed.data;
+    const { name, costPrice, currentPrice, minimumStock } = parsed.data;
 
     const product = await prisma.product.findUnique({ where: { id: productId } });
     if (!product || !product.active) {
@@ -47,6 +48,7 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
       data: {
         productId,
         name,
+        costPrice,
         currentPrice,
         currentStock: 0,
         minimumStock,
