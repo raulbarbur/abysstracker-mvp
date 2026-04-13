@@ -4,6 +4,8 @@ import { ThemePreference, FontSizePreference } from "@prisma/client";
 import { verifyJWT } from "@/lib/auth";
 import { getUserPreferences } from "@/lib/preferences";
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(req: NextRequest) {
   try {
     const token = req.cookies.get("auth_token")?.value;
@@ -53,15 +55,25 @@ export async function PATCH(req: NextRequest) {
       },
     });
 
-    return NextResponse.json({
+    const response = NextResponse.json({
       theme: pref.theme,
       fontSize: pref.fontSize,
     });
+
+    // Set lightweight cookies so the root layout can read preferences
+    // without needing a Prisma/DB call at render time.
+    const cookieOpts = {
+      path: "/",
+      httpOnly: true,
+      sameSite: "strict" as const,
+      maxAge: 60 * 60 * 24 * 30, // 30 days
+    };
+    response.cookies.set("pref_theme", pref.theme, cookieOpts);
+    response.cookies.set("pref_font_size", pref.fontSize, cookieOpts);
+
+    return response;
   } catch (error) {
     console.error("PATCH /api/preferences error:", error);
     return NextResponse.json({ error: "Error interno del servidor" }, { status: 500 });
   }
 }
-
-
-export const dynamic = 'force-dynamic';
