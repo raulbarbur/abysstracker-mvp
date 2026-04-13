@@ -205,7 +205,7 @@ export default function DashboardIndexPage() {
         
         {/* CARD: TOP 5 VARIANTES (Movida abajo) */}
         <div className="bg-surface border border-border rounded-xl p-6 shadow-sm flex flex-col">
-          <h3 className="text-sm font-semibold text-text-secondary uppercase tracking-wider mb-5">Top 5 Variantes</h3>
+          <h3 className="text-sm font-semibold text-text-secondary uppercase tracking-wider mb-5">Productos más vendidos</h3>
           {isLoading ? (
             <div className="flex flex-col gap-4">
               {[...Array(5)].map((_, i) => (
@@ -224,8 +224,8 @@ export default function DashboardIndexPage() {
                   <div className="flex items-center gap-3">
                     <span className="text-text-disabled font-bold text-sm w-3 text-center group-hover:text-primary transition-colors">{i + 1}</span>
                     <div className="flex flex-col">
-                      <span className="text-sm font-semibold text-text-primary leading-tight">{v.variantName}</span>
-                      <span className="text-[10px] text-text-secondary break-words line-clamp-2 max-w-[150px]">{v.productName}</span>
+                      <span className="text-sm font-bold text-text-primary leading-tight">{v.productName}</span>
+                      <span className="text-[10px] text-text-secondary font-semibold uppercase tracking-wide truncate max-w-[150px]">{v.variantName}</span>
                     </div>
                   </div>
                   <span className="font-bold text-primary text-sm flex-shrink-0 bg-primary/10 px-2 py-0.5 rounded-md">{v.totalQuantitySold}</span>
@@ -343,9 +343,9 @@ export default function DashboardIndexPage() {
                         {typeLabel}
                       </span>
                       <div className="flex flex-col min-w-0">
-                        <span className="text-sm font-semibold text-text-primary leading-tight group-hover:text-primary transition-colors truncate">{m.variantName}</span>
+                        <span className="text-sm font-bold text-text-primary leading-tight group-hover:text-primary transition-colors truncate">{m.productName}</span>
                         <div className="flex items-center gap-1.5 mt-0.5">
-                          <span className={`text-[10px] text-text-secondary font-bold uppercase tracking-wide truncate max-w-[100px]`}>{m.productName}</span>
+                          <span className={`text-[10px] text-text-secondary font-semibold uppercase tracking-wide truncate max-w-[100px]`}>{m.variantName}</span>
                           <span className={`text-xs font-black tabular-nums ${qtyClass}`}>{sign}{m.quantity}</span>
                           <span className="text-xs text-text-secondary truncate"><span className="text-text-disabled mx-0.5">•</span> por <span className="font-medium text-text-primary/70">{m.username}</span></span>
                         </div>
