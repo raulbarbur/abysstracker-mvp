@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
-import { verifyJWT } from "@/lib/auth";
-import { getUserPreferences } from "@/lib/preferences";
 import { PreferencesProvider } from "@/components/preferences-provider";
 import { ToastProvider } from "@/components/ui/Toast";
 import "./globals.css";
+
+export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
   title: "AbyssTracker",
@@ -16,21 +16,16 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // SSR Hydration
+  // Read lightweight preference cookies — no DB call needed at layout level.
+  // These cookies are set by PATCH /api/preferences after each user change.
   const cookieStore = cookies();
-  const token = cookieStore.get("auth_token")?.value;
-  
-  let initTheme: "dark" | "light" = "dark";
-  let initFontSize: "normal" | "large" = "normal";
+  const rawTheme = cookieStore.get("pref_theme")?.value;
+  const rawFontSize = cookieStore.get("pref_font_size")?.value;
 
-  if (token) {
-    const payload = await verifyJWT(token);
-    if (payload) {
-      const prefs = await getUserPreferences(payload.userId);
-      initTheme = prefs.theme;
-      initFontSize = prefs.fontSize;
-    }
-  }
+  const initTheme: "dark" | "light" =
+    rawTheme === "light" ? "light" : "dark";
+  const initFontSize: "normal" | "large" =
+    rawFontSize === "large" ? "large" : "normal";
 
   return (
     <html lang="es" className={initTheme} data-theme={initTheme} data-font-size={initFontSize}>
