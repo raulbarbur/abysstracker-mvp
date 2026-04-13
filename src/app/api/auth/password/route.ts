@@ -5,6 +5,8 @@ import { getAuthUser } from '@/lib/auth-middleware';
 import { verifyPassword, hashPassword } from '@/lib/passwords';
 import { createAuditLog } from '@/lib/audit';
 
+export const dynamic = 'force-dynamic';
+
 const passwordSchema = z.object({
   currentPassword: z.string(),
   newPassword: z.string().min(8, "La nueva contraseña debe tener al menos 8 caracteres"),
