@@ -3,7 +3,12 @@
 import React, { useState, useEffect } from "react";
 import { ChevronRight, X, AlertOctagon, Receipt, ShoppingBag } from "lucide-react";
 import { SaleType } from "./page";
-import { PdfViewerModal } from "./PdfViewerModal";
+import dynamic from "next/dynamic";
+
+const PdfViewerModal = dynamic(
+  () => import("./PdfViewerModal").then((mod) => mod.PdfViewerModal),
+  { ssr: false }
+);
 
 interface SaleDetailPanelProps {
   sale: SaleType;

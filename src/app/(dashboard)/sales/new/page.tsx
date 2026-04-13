@@ -4,7 +4,12 @@ import React, { useState } from "react";
 import { ProductBrowser } from "./ProductBrowser";
 import { CartPanel } from "./CartPanel";
 import { ConfirmModal } from "./ConfirmModal";
-import { PdfViewerModal } from "../PdfViewerModal";
+import dynamic from "next/dynamic";
+
+const PdfViewerModal = dynamic(
+  () => import("../PdfViewerModal").then((mod) => mod.PdfViewerModal),
+  { ssr: false }
+);
 
 export interface CartItem {
   variantId: string;
