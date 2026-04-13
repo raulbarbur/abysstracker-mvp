@@ -65,8 +65,8 @@ export async function GET(request: NextRequest) {
     ]);
 
     let totalAmount = 0;
-    salesTodayData.forEach((sale: any) => {
-      sale.saleLines.forEach((line: any) => {
+    salesTodayData.forEach((sale) => {
+      sale.saleLines.forEach((line) => {
         totalAmount += Number(line.unitPrice) * line.quantity;
       });
     });
@@ -89,14 +89,14 @@ export async function GET(request: NextRequest) {
       count: monthlySalesData.length
     };
 
-    const topVariants = topVariantsRaw.map((r: any) => ({
+    const topVariants = topVariantsRaw.map((r) => ({
       variantId: r.variantId,
       variantName: r.variantName,
       productName: r.productName,
       totalQuantitySold: Number(r.totalQuantitySold)
     }));
 
-    const latestMovements = latestMovementsData.map((m: any) => ({
+    const latestMovements = latestMovementsData.map((m) => ({
       id: m.id,
       type: m.type,
       quantity: m.quantity,
@@ -106,7 +106,7 @@ export async function GET(request: NextRequest) {
       createdAt: m.createdAt
     }));
 
-    const lowStockAlerts = lowStockAlertsRaw.map((r: any) => ({
+    const lowStockAlerts = lowStockAlertsRaw.map((r) => ({
       variantId: r.variantId,
       variantName: r.variantName,
       productName: r.productName,
