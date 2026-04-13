@@ -45,8 +45,13 @@ export async function GET(request: NextRequest) {
       // c) latestMovements
       prisma.stockMovement.findMany({
         orderBy: { createdAt: 'desc' },
-        take: 5,
-        include: { variant: true, user: true }
+        take: 10,
+        include: { 
+          variant: {
+            include: { product: true }
+          }, 
+          user: true 
+        }
       }),
       // d) lowStockAlerts
       prisma.$queryRaw<{variantId: string; variantName: string; productName: string; currentStock: unknown; minimumStock: unknown}[]>`
@@ -60,8 +65,8 @@ export async function GET(request: NextRequest) {
     ]);
 
     let totalAmount = 0;
-    salesTodayData.forEach((sale: { saleLines: { unitPrice: NonNullable<unknown>, quantity: number }[] }) => {
-      sale.saleLines.forEach((line: { unitPrice: NonNullable<unknown>, quantity: number }) => {
+    salesTodayData.forEach((sale: any) => {
+      sale.saleLines.forEach((line: any) => {
         totalAmount += Number(line.unitPrice) * line.quantity;
       });
     });
@@ -84,23 +89,24 @@ export async function GET(request: NextRequest) {
       count: monthlySalesData.length
     };
 
-    const topVariants = topVariantsRaw.map((r: { variantId: string; variantName: string; productName: string; totalQuantitySold: unknown }) => ({
+    const topVariants = topVariantsRaw.map((r: any) => ({
       variantId: r.variantId,
       variantName: r.variantName,
       productName: r.productName,
       totalQuantitySold: Number(r.totalQuantitySold)
     }));
 
-    const latestMovements = latestMovementsData.map((m: { id: string; type: string; quantity: number; variant: { name: string }; user: { username: string }; createdAt: Date }) => ({
+    const latestMovements = latestMovementsData.map((m: any) => ({
       id: m.id,
       type: m.type,
       quantity: m.quantity,
       variantName: m.variant.name,
+      productName: m.variant.product.name,
       username: m.user.username,
       createdAt: m.createdAt
     }));
 
-    const lowStockAlerts = lowStockAlertsRaw.map((r: { variantId: string; variantName: string; productName: string; currentStock: unknown; minimumStock: unknown }) => ({
+    const lowStockAlerts = lowStockAlertsRaw.map((r: any) => ({
       variantId: r.variantId,
       variantName: r.variantName,
       productName: r.productName,
@@ -116,7 +122,8 @@ export async function GET(request: NextRequest) {
       lowStockAlerts
     }, { status: 200 });
 
-  } catch {
+  } catch (error) {
+    console.error("Dashboard API error:", error);
     return NextResponse.json({ error: "Ocurrió un error en el servidor" }, { status: 500 });
   }
 }

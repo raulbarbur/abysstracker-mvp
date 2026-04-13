@@ -34,7 +34,7 @@ interface DashboardData {
   salesToday: { count: number; totalAmount: number };
   monthlyStats: { revenue: number; profit: number; count: number };
   topVariants: { variantId: string; variantName: string; productName: string; totalQuantitySold: number }[];
-  latestMovements: { id: string; type: string; quantity: number; variantName: string; username: string; createdAt: string }[];
+  latestMovements: { id: string; type: string; quantity: number; variantName: string; productName: string; username: string; createdAt: string }[];
   lowStockAlerts: { variantId: string; variantName: string; productName: string; currentStock: number; minimumStock: number }[];
 }
 
@@ -308,24 +308,50 @@ export default function DashboardIndexPage() {
             </div>
           ) : (latestMovements && latestMovements.length > 0) ? (
             <div className="flex flex-col gap-4">
-              {latestMovements.slice(0, 5).map((m) => {
-                let badgeVariant: "success" | "destructive" | "warning" | "neutral" = "neutral";
+              {latestMovements.slice(0, 7).map((m) => {
+                let badgeClass = "bg-surface text-text-secondary";
+                let qtyClass = "text-text-primary";
                 let typeLabel = m.type;
-                if (m.type === 'IN') { badgeVariant = 'success'; typeLabel = 'IN'; }
-                else if (m.type === 'OUT') { badgeVariant = 'destructive'; typeLabel = 'OUT'; }
-                else if (m.type === 'ADJUSTMENT') { badgeVariant = 'warning'; typeLabel = 'ADJ'; }
-                else if (m.type === 'LOSS') { badgeVariant = 'destructive'; typeLabel = 'LOSS'; } 
+                let sign = "";
+                
+                if (m.type === 'IN') { 
+                  badgeClass = "bg-success/15 text-success border-success/30"; 
+                  qtyClass = "text-success"; 
+                  typeLabel = 'Ingreso'; 
+                  sign = "+"; 
+                } else if (m.type === 'OUT') { 
+                  badgeClass = "bg-blue-500/15 text-blue-400 border-blue-400/30"; 
+                  qtyClass = "text-blue-400"; 
+                  typeLabel = 'Venta'; 
+                  sign = "-"; 
+                } else if (m.type === 'ADJUSTMENT') { 
+                  badgeClass = "bg-warning/15 text-warning border-warning/30"; 
+                  qtyClass = "text-warning"; 
+                  typeLabel = 'Ajuste'; 
+                  sign = m.quantity >= 0 ? "+" : ""; 
+                } else if (m.type === 'LOSS') { 
+                  badgeClass = "bg-destructive/15 text-destructive border-destructive/30"; 
+                  qtyClass = "text-destructive"; 
+                  typeLabel = 'Pérdida'; 
+                  sign = "-"; 
+                } 
                 
                 return (
                   <div key={m.id} className="flex items-center justify-between border-b border-border/50 pb-3 last:border-0 last:pb-0 group">
-                    <div className="flex items-center gap-3.5">
-                      <Badge variant={badgeVariant} className="w-11 justify-center flex-shrink-0 text-[10px]">{typeLabel}</Badge>
-                      <div className="flex flex-col">
-                        <span className="text-sm font-semibold text-text-primary leading-tight group-hover:text-primary transition-colors">{m.variantName}</span>
-                        <span className="text-xs text-text-secondary mt-0.5">por <span className="font-medium text-text-primary/70">{m.username}</span></span>
+                    <div className="flex items-center gap-3">
+                      <span className={`inline-flex items-center px-2 py-1 rounded-lg border text-[10px] uppercase font-black tracking-widest flex-shrink-0 ${badgeClass}`}>
+                        {typeLabel}
+                      </span>
+                      <div className="flex flex-col min-w-0">
+                        <span className="text-sm font-semibold text-text-primary leading-tight group-hover:text-primary transition-colors truncate">{m.variantName}</span>
+                        <div className="flex items-center gap-1.5 mt-0.5">
+                          <span className={`text-[10px] text-text-secondary font-bold uppercase tracking-wide truncate max-w-[100px]`}>{m.productName}</span>
+                          <span className={`text-xs font-black tabular-nums ${qtyClass}`}>{sign}{m.quantity}</span>
+                          <span className="text-xs text-text-secondary truncate"><span className="text-text-disabled mx-0.5">•</span> por <span className="font-medium text-text-primary/70">{m.username}</span></span>
+                        </div>
                       </div>
                     </div>
-                    <span className="text-xs font-medium text-text-secondary flex-shrink-0 bg-base px-2 py-1 rounded-md">{getRelativeTime(m.createdAt)}</span>
+                    <span className="hidden sm:inline-flex text-xs font-medium text-text-secondary flex-shrink-0 bg-base border border-border/50 px-2 py-1 rounded-md ml-2">{getRelativeTime(m.createdAt)}</span>
                   </div>
                 );
               })}
