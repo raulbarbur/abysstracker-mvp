@@ -40,8 +40,8 @@ export function CartPanel({ cartItems, updateQuantity, subtotal, onConfirmClick 
              <div className="absolute top-2 left-1/2 -translate-x-1/2 w-12 h-1.5 bg-text-disabled/30 rounded-full" />
           )}
           <div className={`flex flex-col flex-1 ${isExpandedMobile ? 'mt-2' : ''}`}>
-            <span className="font-bold text-lg text-text-primary">Carrito ({totalItems})</span>
-            <span className="text-sm font-semibold text-primary/80">${subtotal.toFixed(2)}</span>
+            <span className="font-bold text-lg text-text-primary">Carrito ({totalItems.toLocaleString('es-AR')})</span>
+            <span className="text-sm font-semibold text-primary/80">${subtotal.toLocaleString('es-AR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
           </div>
           
           <div className="flex items-center gap-3">
@@ -86,11 +86,11 @@ export function CartPanel({ cartItems, updateQuantity, subtotal, onConfirmClick 
                       <span className="text-xs text-text-secondary break-words line-clamp-2 font-semibold uppercase">{item.variantName}</span>
                     </div>
                     <span className="font-black text-md text-primary bg-primary/10 px-2 py-1 rounded-md">
-                      ${(item.unitPrice * item.quantity).toFixed(2)}
+                      ${(item.unitPrice * item.quantity).toLocaleString('es-AR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
                     </span>
                   </div>
                   <div className="flex items-center justify-between border-t border-border pt-3">
-                    <span className="text-xs text-text-secondary font-medium">${item.unitPrice.toFixed(2)} c/u</span>
+                    <span className="text-xs text-text-secondary font-medium">${item.unitPrice.toLocaleString('es-AR', {minimumFractionDigits: 2, maximumFractionDigits: 2})} c/u</span>
                     
                     <div className="flex items-center bg-surface border border-border rounded-lg overflow-hidden shadow-sm">
                       <button 
@@ -121,7 +121,7 @@ export function CartPanel({ cartItems, updateQuantity, subtotal, onConfirmClick 
         <div className={`p-6 border-t border-border bg-surface lg:rounded-b-2xl ${!isExpandedMobile && cartItems.length > 0 ? 'hidden lg:block' : ''}`}>
           <div className="flex justify-between items-center mb-6 bg-base p-4 rounded-xl border border-border shadow-inner">
             <span className="text-lg font-bold text-text-secondary uppercase tracking-wider">Total</span>
-            <span className="text-3xl font-black text-text-primary tracking-tight">${subtotal.toFixed(2)}</span>
+            <span className="text-3xl font-black text-text-primary tracking-tight">${subtotal.toLocaleString('es-AR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
           </div>
           
           <button

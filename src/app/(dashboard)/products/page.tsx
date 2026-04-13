@@ -193,9 +193,9 @@ export default function ProductsPage() {
                       {product.variants.map((variant) => (
                         <tr key={variant.id} className="hover:bg-gray-800/30 transition-colors">
                           <td className="px-5 py-3 font-bold text-gray-300">{variant.name}</td>
-                          <td className="px-5 py-3 text-right font-mono text-green-400 font-bold text-lg">${Number(variant.currentPrice).toFixed(2)}</td>
-                          <td className="px-5 py-3 text-right font-mono font-bold text-gray-200">{variant.currentStock}</td>
-                          <td className="px-5 py-3 text-right font-mono font-bold text-gray-500">{variant.minimumStock}</td>
+                          <td className="px-5 py-3 text-right font-mono text-green-400 font-bold text-lg">${Number(variant.currentPrice).toLocaleString('es-AR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                          <td className="px-5 py-3 text-right font-mono font-bold text-gray-200">{variant.currentStock.toLocaleString('es-AR')}</td>
+                          <td className="px-5 py-3 text-right font-mono font-bold text-gray-500">{variant.minimumStock.toLocaleString('es-AR')}</td>
                           <td className="px-5 py-3 text-center">
                             <span className={`text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded shadow-sm ${variant.active ? 'bg-green-500/10 text-green-500 border border-green-500/20' : 'bg-red-500/10 text-red-500 border border-red-500/20'}`}>
                               {variant.active ? 'Activo' : 'Inactivo'}

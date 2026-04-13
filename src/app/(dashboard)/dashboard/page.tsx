@@ -98,7 +98,7 @@ export default function DashboardIndexPage() {
   }
 
   const { salesToday, monthlyStats, topVariants, latestMovements, lowStockAlerts } = data || {};
-  const formatMoney = (amount: number) => `$${Number(amount).toFixed(2)}`;
+  const formatMoney = (amount: number) => `$${Number(amount).toLocaleString('es-AR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
 
   const currentHour = new Date().getHours();
   const greeting = currentHour < 12 ? "Buenos días" : currentHour < 19 ? "Buenas tardes" : "Buenas noches";

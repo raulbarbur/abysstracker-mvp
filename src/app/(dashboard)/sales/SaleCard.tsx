@@ -29,11 +29,11 @@ export function SaleDetailPanel({ sale, onCancelClick }: SaleDetailPanelProps) {
             <div className="flex flex-col pr-4">
               <span className="font-bold text-md md:text-lg text-text-primary whitespace-pre-wrap leading-tight">{line.variant.name}</span>
               <span className="text-sm text-text-secondary font-semibold mt-1">
-                {line.quantity} × ${typeof line.unitPrice === 'string' ? parseFloat(line.unitPrice).toFixed(2) : Number(line.unitPrice).toFixed(2)} - <span className="uppercase text-xs tracking-wider">{line.variant.product.name}</span>
+                {line.quantity} × ${(typeof line.unitPrice === 'string' ? parseFloat(line.unitPrice) : Number(line.unitPrice)).toLocaleString('es-AR', {minimumFractionDigits: 2, maximumFractionDigits: 2})} - <span className="uppercase text-xs tracking-wider">{line.variant.product.name}</span>
               </span>
             </div>
             <span className="font-black text-md md:text-lg text-text-primary bg-surface border border-border px-3 py-1.5 rounded-lg shadow-sm whitespace-nowrap">
-              ${(line.quantity * (typeof line.unitPrice === 'string' ? parseFloat(line.unitPrice) : Number(line.unitPrice))).toFixed(2)}
+              ${(line.quantity * (typeof line.unitPrice === 'string' ? parseFloat(line.unitPrice) : Number(line.unitPrice))).toLocaleString('es-AR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
             </span>
           </div>
         ))}
@@ -41,7 +41,7 @@ export function SaleDetailPanel({ sale, onCancelClick }: SaleDetailPanelProps) {
 
       <div className="mt-4 pt-4 flex justify-between items-center bg-elevated px-6 py-5 rounded-2xl border border-border shadow-inner flex-shrink-0">
         <span className="text-xl font-bold text-text-secondary uppercase tracking-widest leading-none">Total</span>
-        <span className="text-4xl md:text-5xl font-black text-primary drop-shadow-sm leading-none">${totalAmount.toFixed(2)}</span>
+        <span className="text-4xl md:text-5xl font-black text-primary drop-shadow-sm leading-none">${totalAmount.toLocaleString('es-AR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
       </div>
 
       {isActive ? (
@@ -164,7 +164,7 @@ export function SaleCard({ sale, isExpanded, onToggleExpand, onCancelClick }: Sa
           
           <div className="flex items-center gap-2 md:gap-4 flex-shrink-0 pl-1">
              <span className={`font-black tracking-tighter whitespace-nowrap ${isActive ? 'text-text-primary' : 'text-text-secondary line-through opacity-50'} text-lg sm:text-xl md:text-2xl lg:text-3xl`}>
-               ${totalAmount.toFixed(2)}
+               ${totalAmount.toLocaleString('es-AR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
              </span>
              <div className="lg:hidden text-text-secondary flex-shrink-0">
                <ChevronRight size={20} className="md:w-6 md:h-6" />

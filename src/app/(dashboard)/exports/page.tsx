@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
-import { Download, Loader2, XCircle, CalendarDays, User, Package, ChevronDown, ChevronUp } from "lucide-react";
+import { useState, useEffect, useCallback, useRef } from "react";
+import { Download, Loader2, XCircle, CalendarDays, User, Package, ChevronDown, ChevronUp, Info } from "lucide-react";
 
 /* ─────────────────────────────────────────────────────── */
 /*  Types                                                   */
@@ -104,6 +104,64 @@ function InlineError({ message }: { message: string }) {
 }
 
 /* ─────────────────────────────────────────────────────── */
+/*  Info Tooltip                                           */
+/* ─────────────────────────────────────────────────────── */
+function InfoTooltip({ text }: { text: React.ReactNode }) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    const handleClick = (e: MouseEvent | TouchEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClick);
+    document.addEventListener("touchstart", handleClick);
+    return () => {
+      document.removeEventListener("mousedown", handleClick);
+      document.removeEventListener("touchstart", handleClick);
+    };
+  }, [open]);
+
+  return (
+    <div className="relative flex items-center" ref={ref}>
+      <button 
+        type="button"
+        onClick={(e) => { e.preventDefault(); e.stopPropagation(); setOpen((prev) => !prev); }}
+        className={`text-text-secondary transition-colors bg-surface border border-border rounded-full shadow-sm p-0.5 outline-none ${open ? 'text-primary ring-2 ring-primary/30' : 'hover:text-primary'}`}
+        aria-label="Información"
+      >
+        <Info size={14} />
+      </button>
+      {open && (
+        <>
+          {/* Mobile centered modal style */}
+          <div className="fixed inset-0 z-[110] flex items-center justify-center sm:hidden p-5 animate-in fade-in duration-200">
+             <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setOpen(false)} />
+             <div 
+               className="relative w-full max-w-[320px] bg-base border border-border p-5 text-sm text-text-primary rounded-2xl shadow-2xl font-medium leading-relaxed cursor-default animate-in zoom-in-95 duration-200"
+               onClick={(e) => e.stopPropagation()}
+             >
+               {text}
+             </div>
+          </div>
+          
+          {/* Desktop relative popover style */}
+          <div 
+            className="hidden sm:block absolute left-1/2 -translate-x-1/2 bottom-full mb-3 w-72 bg-base border border-border p-3.5 text-xs text-text-primary rounded-xl shadow-2xl z-[100] font-medium leading-relaxed cursor-default animate-in fade-in zoom-in-95 duration-200"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {text}
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
+/* ─────────────────────────────────────────────────────── */
 /*  Download button                                         */
 /* ─────────────────────────────────────────────────────── */
 function DownloadButton({ id, isLoading, onClick }: {
@@ -141,7 +199,7 @@ function DownloadButton({ id, isLoading, onClick }: {
 /* ─────────────────────────────────────────────────────── */
 function ExportCard({ title, subtitle, children }: {
   title: string;
-  subtitle?: string;
+  subtitle?: React.ReactNode;
   children: React.ReactNode;
 }) {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -164,7 +222,7 @@ function ExportCard({ title, subtitle, children }: {
       >
         <div className="flex flex-col gap-0.5 pr-2">
           <h2 className="text-base font-bold text-text-primary tracking-tight">{title}</h2>
-          {subtitle && <p className="text-xs text-text-secondary leading-tight mt-1">{subtitle}</p>}
+          {subtitle && <div className="text-xs text-text-secondary leading-tight mt-1">{subtitle}</div>}
         </div>
         {isMobile && (
           <div className="flex-shrink-0 text-text-secondary bg-base border border-border rounded-full p-1.5 shadow-sm">
@@ -372,7 +430,12 @@ export default function ExportacionesPage() {
       {/* Section 2: Current stock export */}
       <ExportCard
         title="Exportar stock actual"
-        subtitle="Snapshot del stock disponible por variante al momento de la descarga."
+        subtitle={
+          <span className="flex items-center gap-1.5 flex-wrap">
+            Snapshot del stock disponible por variante al momento de la descarga.
+            <InfoTooltip text={<>La columna <strong className="text-primary">Activo</strong> indica si la variante está habilitada para interactuar en el sistema comercial. Las inhabilitadas no pueden verse en las pantallas de ventas, pero se preservan con fines de auditoría e historial.</>} />
+          </span>
+        }
       >
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <FilterLabel label="Producto (opcional)" icon={Package}>
