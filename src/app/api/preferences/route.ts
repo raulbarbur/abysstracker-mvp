@@ -62,3 +62,6 @@ export async function PATCH(req: NextRequest) {
     return NextResponse.json({ error: "Error interno del servidor" }, { status: 500 });
   }
 }
+
+
+export const dynamic = 'force-dynamic';
