@@ -195,14 +195,31 @@ export default function PerfilPage() {
   };
 
   /* ── Appearance ── */
-  const { theme, fontSize, setTheme, setFontSize } = usePreferences();
+  const { theme, fontSize, setTheme, setFontSize, persistPreferences } = usePreferences();
+  const [isSavingPrefs, setIsSavingPrefs] = useState(false);
+  const [prefStatus, setPrefStatus] = useState<{ type: "success" | "error"; msg: string } | null>(null);
 
   const handleTheme = (t: ThemePreference) => {
     if (t !== theme) setTheme(t);
   };
 
   const handleFontSize = (fs: FontSizePreference) => {
-    if (fs !== fontSize) setFontSize(fs);
+    if (fs !== fontSize) {
+      setFontSize(fs);
+      setPrefStatus(null);
+    }
+  };
+
+  const handleSavePreferences = async () => {
+    setIsSavingPrefs(true);
+    setPrefStatus(null);
+    const ok = await persistPreferences();
+    if (ok) {
+      setPrefStatus({ type: "success", msg: "Preferencias guardadas correctamente." });
+    } else {
+      setPrefStatus({ type: "error", msg: "Error al guardar preferencias." });
+    }
+    setIsSavingPrefs(false);
   };
 
   return (
@@ -372,8 +389,40 @@ export default function PerfilPage() {
               </span>
             </OptionCard>
           </div>
+          
+          {prefStatus && (
+            <div
+              role="alert"
+              className={`
+                mt-2 flex items-start gap-3 rounded-lg border px-4 py-3 text-sm font-medium
+                ${prefStatus.type === "success"
+                  ? "bg-success/10 border-success/20 text-success"
+                  : "bg-destructive/10 border-destructive/20 text-destructive"
+                }
+              `}
+            >
+              {prefStatus.type === "success"
+                ? <CheckCircle2 size={16} className="flex-shrink-0 mt-0.5" />
+                : <XCircle size={16} className="flex-shrink-0 mt-0.5" />
+              }
+              {prefStatus.msg}
+            </div>
+          )}
+
+          <div className="pt-3">
+            <Button
+              onClick={handleSavePreferences}
+              variant="primary"
+              size="md"
+              isLoading={isSavingPrefs}
+              disabled={isSavingPrefs}
+            >
+              Guardar preferencias
+            </Button>
+          </div>
+
           <p className="text-xs text-text-disabled">
-            Los cambios se aplican de inmediato y se almacenan en el perfil activo.
+            Los cambios se previsualizan de inmediato, pero deben guardarse para persistir en tu perfil.
           </p>
         </div>
       </Section>

@@ -10,6 +10,7 @@ interface PreferencesContextType {
   setFontSize: (fs: FontSizePreference) => void;
   toggleTheme: () => void;
   toggleFontSize: () => void;
+  persistPreferences: () => Promise<boolean>;
 }
 
 const PreferencesContext = createContext<PreferencesContextType | undefined>(undefined);
@@ -26,30 +27,31 @@ export function PreferencesProvider({
   const [theme, setThemeState] = useState<ThemePreference>(initialTheme);
   const [fontSize, setFontSizeState] = useState<FontSizePreference>(initialFontSize);
 
-  const updatePreferenceOnServer = async (key: 'theme' | 'fontSize', value: string) => {
-    try {
-      await fetch('/api/preferences', {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ [key]: value })
-      });
-    } catch (e) {
-      console.error("No se pudieron guardar las preferencias", e);
-    }
-  };
 
   const setTheme = (t: ThemePreference) => {
     setThemeState(t);
     const root = document.documentElement;
     root.setAttribute("data-theme", t);
     root.className = t === 'dark' ? 'dark' : 'light';
-    updatePreferenceOnServer('theme', t);
   };
 
   const setFontSize = (fs: FontSizePreference) => {
     setFontSizeState(fs);
     document.documentElement.setAttribute("data-font-size", fs);
-    updatePreferenceOnServer('fontSize', fs);
+  };
+
+  const persistPreferences = async () => {
+    try {
+      const res = await fetch('/api/preferences', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ theme, fontSize })
+      });
+      return res.ok;
+    } catch (e) {
+      console.error("No se pudieron guardar las preferencias", e);
+      return false;
+    }
   };
 
   const toggleTheme = () => {
@@ -76,7 +78,15 @@ export function PreferencesProvider({
   }, [theme, fontSize]);
 
   return (
-    <PreferencesContext.Provider value={{ theme, fontSize, setTheme, setFontSize, toggleTheme, toggleFontSize }}>
+    <PreferencesContext.Provider value={{ 
+      theme, 
+      fontSize, 
+      setTheme, 
+      setFontSize, 
+      toggleTheme, 
+      toggleFontSize,
+      persistPreferences 
+    }}>
       {children}
     </PreferencesContext.Provider>
   );
