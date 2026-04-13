@@ -112,3 +112,6 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
     return NextResponse.json({ error: "Ocurrió un error en el servidor al intentar anular la venta" }, { status: 500 });
   }
 }
+
+
+export const dynamic = 'force-dynamic';

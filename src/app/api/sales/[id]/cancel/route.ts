@@ -102,3 +102,6 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
     return NextResponse.json({ error: "Ocurrió un error en el servidor" }, { status: 500 });
   }
 }
+
+
+export const dynamic = 'force-dynamic';
