@@ -6,6 +6,8 @@ import { PreferencesProvider } from "@/components/preferences-provider";
 import { ToastProvider } from "@/components/ui/Toast";
 import "./globals.css";
 
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
   title: "AbyssTracker",
   description: "Stock and Sales Management System",
