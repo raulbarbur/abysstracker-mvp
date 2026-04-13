@@ -58,7 +58,9 @@ export default function SalesHistoryPage() {
         const data = await res.json();
         setSales(data.sales || []);
         if (data.sales && data.sales.length > 0) {
-          setExpandedSaleId(prev => prev || data.sales[0].id);
+          if (window.innerWidth >= 1024) {
+            setExpandedSaleId(prev => prev || data.sales[0].id);
+          }
         }
       }
     } catch (e) {
@@ -120,7 +122,7 @@ export default function SalesHistoryPage() {
         <div className="bg-surface border border-border shadow-sm rounded-2xl p-5 flex items-center justify-between">
           <div>
             <p className="text-xs font-bold text-text-secondary uppercase tracking-widest mb-1">Total Cobrado (Activo)</p>
-            <p className="text-3xl font-black text-primary">${summary.totalCobrado.toFixed(2)}</p>
+            <p className="text-3xl font-black text-primary">${summary.totalCobrado.toLocaleString('es-AR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</p>
           </div>
           <div className="p-4 bg-primary/10 text-primary rounded-xl hidden sm:block">
             <TrendingUp size={28} />
@@ -129,7 +131,7 @@ export default function SalesHistoryPage() {
         <div className="bg-surface border border-border shadow-sm rounded-2xl p-5 flex items-center justify-between">
           <div>
             <p className="text-xs font-bold text-text-secondary uppercase tracking-widest mb-1">Tickets Emitidos</p>
-            <p className="text-3xl font-black text-text-primary">{summary.count}</p>
+            <p className="text-3xl font-black text-text-primary">{summary.count.toLocaleString('es-AR')}</p>
           </div>
           <div className="p-4 bg-base border border-border text-text-secondary rounded-xl hidden sm:block">
             <Receipt size={28} />
@@ -138,7 +140,7 @@ export default function SalesHistoryPage() {
         <div className="bg-surface border border-border shadow-sm rounded-2xl p-5 flex items-center justify-between">
           <div>
             <p className="text-xs font-bold text-text-secondary uppercase tracking-widest mb-1">Anulaciones</p>
-            <p className="text-3xl font-black text-destructive">-${summary.totalAnulado.toFixed(2)}</p>
+            <p className="text-3xl font-black text-destructive">-${summary.totalAnulado.toLocaleString('es-AR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</p>
           </div>
           <div className="p-4 bg-destructive/10 text-destructive rounded-xl hidden sm:block">
             <AlertOctagon size={28} />

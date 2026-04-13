@@ -90,14 +90,14 @@ export function PriceHistoryModal({ variant, isOpen, onClose }: PriceHistoryModa
                     )}
                   </div>
                   <div className="text-center">
-                    <span className="font-black text-md text-text-secondary line-through">${prevPrice.toFixed(2)}</span>
+                    <span className="font-black text-md text-text-secondary line-through">${prevPrice.toLocaleString('es-AR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
                   </div>
                   <div className="text-right">
                     <span className={`font-black text-md ${isIncrease ? "text-destructive" : "text-success"}`}>
-                      ${newPrice.toFixed(2)}
+                      ${newPrice.toLocaleString('es-AR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
                     </span>
                     <span className={`block text-xs font-bold mt-0.5 ${isIncrease ? "text-destructive" : "text-success"}`}>
-                      {isIncrease ? "▲" : "▼"} ${Math.abs(newPrice - prevPrice).toFixed(2)}
+                      {isIncrease ? "▲" : "▼"} ${Math.abs(newPrice - prevPrice).toLocaleString('es-AR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
                     </span>
                   </div>
                 </div>

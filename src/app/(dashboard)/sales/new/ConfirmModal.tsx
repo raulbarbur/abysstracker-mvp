@@ -88,11 +88,11 @@ export function ConfirmModal({ isOpen, onClose, cartItems, subtotal, onSuccess }
               <div className="flex flex-col pr-4">
                 <span className="font-bold text-md md:text-lg text-text-primary whitespace-pre-wrap">{item.productName} - {item.variantName}</span>
                 <span className="text-sm text-text-secondary font-semibold">
-                  {item.quantity} x ${item.unitPrice.toFixed(2)}
+                  {item.quantity} x ${item.unitPrice.toLocaleString('es-AR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
                 </span>
               </div>
               <span className="font-black text-md md:text-lg text-text-primary bg-surface border border-border px-3 py-1.5 rounded-lg shadow-sm">
-                ${(item.quantity * item.unitPrice).toFixed(2)}
+                ${(item.quantity * item.unitPrice).toLocaleString('es-AR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
               </span>
             </div>
           ))}
@@ -100,7 +100,7 @@ export function ConfirmModal({ isOpen, onClose, cartItems, subtotal, onSuccess }
 
         <div className="mt-6 pt-5 flex justify-between items-center bg-elevated px-6 py-5 rounded-2xl border border-border shadow-inner">
           <span className="text-xl font-bold text-text-secondary uppercase tracking-widest">Total a Cobrar</span>
-          <span className="text-4xl md:text-5xl font-black text-primary drop-shadow-sm">${subtotal.toFixed(2)}</span>
+          <span className="text-4xl md:text-5xl font-black text-primary drop-shadow-sm">${subtotal.toLocaleString('es-AR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
         </div>
       </div>
 

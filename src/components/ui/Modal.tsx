@@ -61,7 +61,7 @@ export function Modal({ isOpen, onClose, title, children, footer, maxWidth = "md
     >
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-black/70 backdrop-blur-sm"
+        className="fixed inset-0 bg-black/70 backdrop-blur-sm animate-in fade-in duration-200"
         onClick={onClose}
         aria-hidden="true"
       />

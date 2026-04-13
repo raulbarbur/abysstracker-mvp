@@ -64,8 +64,8 @@ export async function generateStockExport(filters: { productId?: string }) {
   });
 
   const rows = variants.map(v => ({
-    'Variante': v.name,
     'Producto': v.product.name,
+    'Variante': v.name,
     'Stock Actual': v.currentStock,
     'Stock Mínimo': v.minimumStock,
     'Activo': v.active ? 'Sí' : 'No'
@@ -104,12 +104,19 @@ export async function generateMovementsExport(filters: { dateFrom?: string; date
     hour: '2-digit', minute: '2-digit', hour12: false
   }).format(d);
 
+  const movementLabels: Record<string, string> = {
+    'IN': 'Entrada',
+    'OUT': 'Salida',
+    'ADJUSTMENT': 'Ajuste',
+    'LOSS': 'Pérdida'
+  };
+
   const rows = movements.map(m => ({
     'Fecha': formatDate(m.createdAt),
-    'Tipo': m.type,
+    'Tipo': movementLabels[m.type] || m.type,
     'Cantidad': m.quantity,
-    'Variante': m.variant.name,
     'Producto': m.variant.product.name,
+    'Variante': m.variant.name,
     'Motivo': m.reason || '',
     'Usuario': m.user.username
   }));

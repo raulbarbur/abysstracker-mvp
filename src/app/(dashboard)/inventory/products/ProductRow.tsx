@@ -197,9 +197,9 @@ export function ProductRow({
                             </span>
                           </div>
                           <div className="flex items-center gap-3 mt-1 flex-wrap">
-                            <span className="text-md font-black text-primary">${price.toFixed(2)}</span>
+                            <span className="text-md font-black text-primary">${price.toLocaleString('es-AR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
                             <span className="text-xs text-text-secondary font-semibold">
-                              Costo: ${cost.toFixed(2)}
+                              Costo: ${cost.toLocaleString('es-AR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
                             </span>
                           </div>
                         </div>
@@ -208,11 +208,11 @@ export function ProductRow({
                         <div className="flex items-center gap-2 flex-shrink-0 flex-wrap">
                           <div className={`flex items-center gap-2 px-3 py-1.5 rounded-xl border font-bold text-sm ${stockBadge}`}>
                             <span className={`w-2 h-2 rounded-full flex-shrink-0 ${stockDot}`} />
-                            <span>{variant.currentStock} en stock</span>
+                            <span>{variant.currentStock.toLocaleString('es-AR')} en stock</span>
                           </div>
                           {variant.minimumStock > 0 && (
                             <span className="text-xs text-text-secondary font-semibold whitespace-nowrap">
-                              mín. {variant.minimumStock}
+                              mín. {variant.minimumStock.toLocaleString('es-AR')}
                             </span>
                           )}
                         </div>

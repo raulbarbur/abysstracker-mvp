@@ -102,10 +102,10 @@ export function ProductBrowser({ onAddToCart, cartItems }: ProductBrowserProps) 
           
           <div className="flex flex-wrap gap-1.5 md:gap-3 mt-2">
             <span className="text-xs md:text-sm font-black text-text-primary px-2 py-1 rounded bg-elevated border border-border">
-              ${price.toFixed(2)}
+              ${price.toLocaleString('es-AR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
             </span>
             <span className={`text-xs md:text-sm font-bold px-2 py-1 rounded ${isOos ? 'bg-destructive/10 text-destructive' : 'bg-success/10 text-success'}`}>
-              Stock: {stock}
+              Stock: {stock.toLocaleString('es-AR')}
             </span>
           </div>
         </div>
