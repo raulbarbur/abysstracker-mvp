@@ -6,9 +6,10 @@ import { createAuditLog, PrismaInstance } from '@/lib/audit';
 
 const updateVariantSchema = z.object({
   name: z.string().min(1, "El nombre es requerido").max(100, "Máximo 100 caracteres").optional(),
+  costPrice: z.number().min(0, "El costo debe ser mayor o igual a 0").optional(),
   currentPrice: z.number().gt(0, "El precio debe ser mayor a 0").optional(),
   minimumStock: z.number().int().min(0, "El stock mínimo debe ser 0 o mayor").optional(),
-}).refine(data => data.name !== undefined || data.currentPrice !== undefined || data.minimumStock !== undefined, {
+}).refine(data => data.name !== undefined || data.currentPrice !== undefined || data.costPrice !== undefined || data.minimumStock !== undefined, {
   message: "Debes enviar al menos un campo para modificar"
 });
 
@@ -32,7 +33,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
       return NextResponse.json({ error: errMessage === "Required" ? "Datos inválidos" : errMessage }, { status: 400 });
     }
 
-    const { name, currentPrice, minimumStock } = parsed.data;
+    const { name, costPrice, currentPrice, minimumStock } = parsed.data;
 
     const variant = await prisma.variant.findUnique({ where: { id } });
     if (!variant) return NextResponse.json({ error: "Variante no encontrada" }, { status: 404 });
@@ -46,26 +47,15 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
       }
     }
 
-    if (currentPrice !== undefined) {
-      if (Number(currentPrice) === Number(variant.currentPrice)) {
-        return NextResponse.json({ error: "El precio es igual al actual" }, { status: 400 });
-      }
-    }
-
-    if (minimumStock !== undefined) {
-      if (minimumStock === variant.minimumStock) {
-        return NextResponse.json({ error: "El stock mínimo es igual al actual" }, { status: 400 });
-      }
-    }
-
     const result = await prisma.$transaction(async (tx: PrismaInstance) => {
       // Locking the row to ensure we read and update sequentially 
       await tx.$queryRaw`SELECT 1 FROM "Variant" WHERE id = ${id} FOR UPDATE`;
       
-      const updateData: { name?: string; minimumStock?: number; currentPrice?: number } = {};
+      const updateData: { name?: string; minimumStock?: number; currentPrice?: number; costPrice?: number } = {};
       
       if (name !== undefined && name !== variant.name) updateData.name = name;
       if (minimumStock !== undefined && minimumStock !== variant.minimumStock) updateData.minimumStock = minimumStock;
+      if (costPrice !== undefined && Number(costPrice) !== Number(variant.costPrice)) updateData.costPrice = costPrice;
       
       if (currentPrice !== undefined && Number(currentPrice) !== Number(variant.currentPrice)) {
         updateData.currentPrice = currentPrice;
@@ -96,6 +86,9 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
       }
       if (updateData.currentPrice !== undefined) {
         await createAuditLog(tx, { entity: 'Variant', entityId: id, action: 'UPDATE', field: 'currentPrice', previousValue: String(variant.currentPrice), newValue: String(updateData.currentPrice), userId: authUser.userId });
+      }
+      if (updateData.costPrice !== undefined) {
+        await createAuditLog(tx, { entity: 'Variant', entityId: id, action: 'UPDATE', field: 'costPrice', previousValue: String(variant.costPrice), newValue: String(updateData.costPrice), userId: authUser.userId });
       }
 
       return updatedVariant;

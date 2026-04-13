@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { Pencil } from "lucide-react";
 
 interface Variant {
   id: string;
@@ -157,7 +158,7 @@ export default function ProductsPage() {
                     <h2 className="text-xl font-bold text-gray-100 flex items-center gap-3">
                       {product.name}
                       {!product.active && <span className="text-[10px] px-2 py-0.5 rounded shadow-inner uppercase tracking-wider font-black bg-red-500/20 text-red-500 border border-red-500/20">Inactivo</span>}
-                      <button onClick={() => startEditingProduct(product)} className="text-sm font-medium text-gray-500 hover:text-blue-400 transition-colors bg-gray-800/50 px-2 py-0.5 rounded-md border border-gray-700">✏️ Editar</button>
+                      <button onClick={() => startEditingProduct(product)} className="text-sm font-medium text-gray-500 hover:text-blue-400 transition-colors bg-gray-800/50 px-2 py-0.5 rounded-md border border-gray-700 flex items-center gap-1"><Pencil className="w-3.5 h-3.5" /> Editar</button>
                     </h2>
                   )}
                 </div>

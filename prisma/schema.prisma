@@ -19,6 +19,7 @@ model User {
   sales            Sale[]         @relation("SaleUser")
   canceledSales    Sale[]         @relation("SaleCancelledBy")
   stockMovements   StockMovement[]
+  preference       UserPreference?
 }
 
 model Product {
@@ -36,6 +37,7 @@ model Variant {
   productId    String
   name         String
   currentPrice Decimal  @db.Decimal(10, 2)
+  costPrice    Decimal  @default(0) @db.Decimal(10, 2)
   currentStock Int      @default(0)
   minimumStock Int      @default(0)
   active       Boolean  @default(true)
@@ -80,6 +82,7 @@ model Sale {
   user             User       @relation("SaleUser", fields: [userId], references: [id])
   cancelledByUser  User?      @relation("SaleCancelledBy", fields: [cancelledByUserId], references: [id])
   saleLines        SaleLine[]
+  invoice          Invoice?
 }
 
 model SaleLine {
@@ -144,4 +147,34 @@ model AuthLog {
   successful Boolean
   ip         String
   timestamp  DateTime
+}
+
+enum ThemePreference {
+  dark
+  light
+}
+
+enum FontSizePreference {
+  normal
+  large
+}
+
+model UserPreference {
+  id        String             @id @default(cuid())
+  userId    String             @unique
+  theme     ThemePreference    @default(dark)
+  fontSize  FontSizePreference @default(normal)
+  updatedAt DateTime           @updatedAt
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+model Invoice {
+  id            String   @id @default(cuid())
+  saleId        String   @unique
+  invoiceNumber String   @unique
+  pdfData       Bytes
+  createdAt     DateTime @default(now())
+
+  sale          Sale     @relation(fields: [saleId], references: [id])
 }

@@ -17,19 +17,25 @@ export async function generateSalesExport(filters: { dateFrom?: string; dateTo?:
     where,
     include: {
       user: true,
+      invoice: true,
       saleLines: { include: { variant: { include: { product: true } } } }
     },
     orderBy: { date: 'desc' },
     take: 10000
   });
 
+  const formatDate = (d: Date) => new Intl.DateTimeFormat('es-AR', {
+    day: '2-digit', month: '2-digit', year: 'numeric',
+    hour: '2-digit', minute: '2-digit', hour12: false
+  }).format(d);
+
   const rows: Record<string, string | number>[] = [];
   sales.forEach(sale => {
     sale.saleLines.forEach(line => {
       rows.push({
-        'ID Venta': sale.id,
-        'Fecha': sale.date.toISOString(),
-        'Estado': sale.status,
+        'Comprobante': sale.invoice?.invoiceNumber || 'S/N',
+        'Fecha': formatDate(sale.date),
+        'Estado': sale.status === 'ACTIVE' ? 'Activa' : 'Anulada',
         'Usuario': sale.user.username,
         'Variante': line.variant.name,
         'Producto': line.variant.product.name,
@@ -93,13 +99,17 @@ export async function generateMovementsExport(filters: { dateFrom?: string; date
     take: 10000
   });
 
+  const formatDate = (d: Date) => new Intl.DateTimeFormat('es-AR', {
+    day: '2-digit', month: '2-digit', year: 'numeric',
+    hour: '2-digit', minute: '2-digit', hour12: false
+  }).format(d);
+
   const rows = movements.map(m => ({
-    'ID': m.id,
-    'Fecha': m.createdAt.toISOString(),
+    'Fecha': formatDate(m.createdAt),
     'Tipo': m.type,
+    'Cantidad': m.quantity,
     'Variante': m.variant.name,
     'Producto': m.variant.product.name,
-    'Cantidad': m.quantity,
     'Motivo': m.reason || '',
     'Usuario': m.user.username
   }));

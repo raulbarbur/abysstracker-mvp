@@ -6,6 +6,12 @@ import { createAuditLog } from '@/lib/audit';
 
 const createProductSchema = z.object({
   name: z.string().min(1, "El nombre es requerido").max(100, "Máximo 100 caracteres"),
+  variants: z.array(z.object({
+    name: z.string().min(1, "Nombre de variante requerido"),
+    costPrice: z.number().min(0, "Costo inválido"),
+    currentPrice: z.number().min(0.01, "Precio de venta inválido"),
+    minimumStock: z.number().int().min(0),
+  })).optional()
 });
 
 export async function GET(request: NextRequest) {
@@ -51,7 +57,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: parsed.error.issues[0]?.message || "Datos inválidos" }, { status: 400 });
     }
 
-    const { name } = parsed.data;
+    const { name, variants } = parsed.data;
 
     const existingProduct = await prisma.product.findUnique({ where: { name } });
     if (existingProduct) {
@@ -61,8 +67,18 @@ export async function POST(request: NextRequest) {
     const newProduct = await prisma.product.create({
       data: {
         name,
-        active: true
-      }
+        active: true,
+        variants: variants && variants.length > 0 ? {
+          create: variants.map(v => ({
+            name: v.name,
+            costPrice: v.costPrice,
+            currentPrice: v.currentPrice,
+            minimumStock: v.minimumStock,
+            active: true
+          }))
+        } : undefined
+      },
+      include: { variants: true }
     });
 
     await createAuditLog(prisma, {
