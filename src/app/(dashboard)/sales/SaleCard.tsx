@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { ChevronRight, X, AlertOctagon, Receipt, ShoppingBag } from "lucide-react";
+import { ChevronRight, X, AlertOctagon, Receipt, ShoppingBag, Banknote, ArrowLeftRight } from "lucide-react";
 import { SaleType } from "./page";
 import dynamic from "next/dynamic";
 
@@ -40,7 +40,15 @@ export function SaleDetailPanel({ sale, onCancelClick }: SaleDetailPanelProps) {
       </div>
 
       <div className="mt-4 pt-4 flex justify-between items-center bg-elevated px-6 py-5 rounded-2xl border border-border shadow-inner flex-shrink-0">
-        <span className="text-xl font-bold text-text-secondary uppercase tracking-widest leading-none">Total</span>
+        <div className="flex flex-col gap-1">
+          <span className="text-xl font-bold text-text-secondary uppercase tracking-widest leading-none">Total</span>
+          {sale.paymentMethod && (
+            <span className="flex items-center gap-1 text-xs font-semibold text-text-secondary">
+              {sale.paymentMethod === "CASH" ? <Banknote size={13} /> : <ArrowLeftRight size={13} />}
+              {sale.paymentMethod === "CASH" ? "Efectivo" : "Transferencia"}
+            </span>
+          )}
+        </div>
         <span className="text-4xl md:text-5xl font-black text-primary drop-shadow-sm leading-none">${totalAmount.toLocaleString('es-AR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
       </div>
 

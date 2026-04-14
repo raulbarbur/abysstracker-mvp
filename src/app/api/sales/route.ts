@@ -39,6 +39,7 @@ const saleLineSchema = z.object({
 
 const postSaleSchema = z.object({
   lines: z.array(saleLineSchema).min(1, "La venta debe tener al menos una línea"),
+  paymentMethod: z.enum(["CASH", "TRANSFER"]).optional(),
 });
 
 export async function POST(request: NextRequest) {
@@ -58,7 +59,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: parsed.error.issues[0]?.message || "La venta debe tener al menos una línea" }, { status: 400 });
     }
 
-    const { lines } = parsed.data;
+    const { lines, paymentMethod } = parsed.data;
 
     const user = await prisma.user.findUnique({ where: { id: authUser.userId } });
     if (!user) return NextResponse.json({ error: "Usuario no encontrado" }, { status: 404 });
@@ -111,7 +112,8 @@ export async function POST(request: NextRequest) {
           data: {
             userId: authUser.userId,
             date: new Date(),
-            status: 'ACTIVE'
+            status: 'ACTIVE',
+            paymentMethod: paymentMethod ?? null
           }
         });
 

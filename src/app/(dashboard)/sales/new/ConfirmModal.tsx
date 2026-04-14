@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Loader2, CheckCircle, AlertOctagon } from "lucide-react";
+import { Loader2, CheckCircle, AlertOctagon, Banknote, ArrowLeftRight } from "lucide-react";
 import { Modal } from "@/components/ui/Modal";
 import { CartItem } from "./page";
 
@@ -16,23 +16,26 @@ interface ConfirmModalProps {
 export function ConfirmModal({ isOpen, onClose, cartItems, subtotal, onSuccess }: ConfirmModalProps) {
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState("");
+  const [paymentMethod, setPaymentMethod] = useState<"CASH" | "TRANSFER">("CASH");
 
   useEffect(() => {
     if (isOpen) {
       setStatus("idle");
       setErrorMessage("");
+      setPaymentMethod("CASH");
     }
   }, [isOpen]);
 
   const handleConfirm = async () => {
     setStatus("loading");
-    
+
     try {
       const payload = {
         lines: cartItems.map(item => ({
           variantId: item.variantId,
           quantity: item.quantity
-        }))
+        })),
+        paymentMethod
       };
 
       const res = await fetch("/api/sales", {
@@ -98,7 +101,34 @@ export function ConfirmModal({ isOpen, onClose, cartItems, subtotal, onSuccess }
           ))}
         </div>
 
-        <div className="mt-6 pt-5 flex justify-between items-center bg-elevated px-6 py-5 rounded-2xl border border-border shadow-inner">
+        <div className="mt-5 flex gap-3">
+          <button
+            type="button"
+            onClick={() => setPaymentMethod("CASH")}
+            className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl border-2 font-bold text-sm transition-all ${
+              paymentMethod === "CASH"
+                ? "border-emerald-500 bg-emerald-500/10 text-emerald-500"
+                : "border-border text-text-secondary hover:border-emerald-500/40"
+            }`}
+          >
+            <Banknote size={18} />
+            Efectivo
+          </button>
+          <button
+            type="button"
+            onClick={() => setPaymentMethod("TRANSFER")}
+            className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl border-2 font-bold text-sm transition-all ${
+              paymentMethod === "TRANSFER"
+                ? "border-blue-500 bg-blue-500/10 text-blue-500"
+                : "border-border text-text-secondary hover:border-blue-500/40"
+            }`}
+          >
+            <ArrowLeftRight size={18} />
+            Transferencia
+          </button>
+        </div>
+
+        <div className="mt-4 pt-5 flex justify-between items-center bg-elevated px-6 py-5 rounded-2xl border border-border shadow-inner">
           <span className="text-xl font-bold text-text-secondary uppercase tracking-widest">Total a Cobrar</span>
           <span className="text-4xl md:text-5xl font-black text-primary drop-shadow-sm">${subtotal.toLocaleString('es-AR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
         </div>

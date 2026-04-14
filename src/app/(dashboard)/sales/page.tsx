@@ -10,6 +10,7 @@ export interface SaleType {
   id: string;
   date: string;
   status: "ACTIVE" | "CANCELLED";
+  paymentMethod?: "CASH" | "TRANSFER" | null;
   cancellationReason?: string;
   cancellationDate?: string;
   user: { username: string };
