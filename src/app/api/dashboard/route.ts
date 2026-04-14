@@ -54,8 +54,8 @@ export async function GET(request: NextRequest) {
         }
       }),
       // d) lowStockAlerts
-      prisma.$queryRaw<{variantId: string; variantName: string; productName: string; currentStock: unknown; minimumStock: unknown}[]>`
-        SELECT v.id as "variantId", v.name as "variantName", p.name as "productName", v."currentStock" as "currentStock", v."minimumStock" as "minimumStock"
+      prisma.$queryRaw<{variantId: string; variantName: string; productName: string; productId: string; currentStock: unknown; minimumStock: unknown}[]>`
+        SELECT v.id as "variantId", v.name as "variantName", p.name as "productName", p.id as "productId", v."currentStock" as "currentStock", v."minimumStock" as "minimumStock"
         FROM "Variant" v
         JOIN "Product" p ON p.id = v."productId"
         WHERE v."minimumStock" > 0 AND v."currentStock" < v."minimumStock"
@@ -110,6 +110,7 @@ export async function GET(request: NextRequest) {
       variantId: r.variantId,
       variantName: r.variantName,
       productName: r.productName,
+      productId: r.productId,
       currentStock: Number(r.currentStock),
       minimumStock: Number(r.minimumStock)
     }));

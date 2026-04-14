@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import { TrendingUp, AlertTriangle, Hand } from "lucide-react";
 import { Banner } from "@/components/ui/Banner";
 import { Skeleton } from "@/components/ui/Skeleton";
@@ -35,7 +36,7 @@ interface DashboardData {
   monthlyStats: { revenue: number; profit: number; count: number };
   topVariants: { variantId: string; variantName: string; productName: string; totalQuantitySold: number }[];
   latestMovements: { id: string; type: string; quantity: number; variantName: string; productName: string; username: string; createdAt: string }[];
-  lowStockAlerts: { variantId: string; variantName: string; productName: string; currentStock: number; minimumStock: number }[];
+  lowStockAlerts: { variantId: string; variantName: string; productName: string; productId: string; currentStock: number; minimumStock: number }[];
 }
 
 function getRelativeTime(dateStr: string) {
@@ -255,16 +256,24 @@ export default function DashboardIndexPage() {
                 const isZero = alert.currentStock === 0;
                 return (
                   <div key={alert.variantId} className="flex items-center justify-between border-b border-border/50 pb-3 last:border-0 last:pb-0">
-                    <div className="flex flex-col flex-1 pr-3">
-                      <div className="flex items-center gap-2">
+                    <div className="flex flex-col flex-1 pr-3 min-w-0">
+                      <div className="flex items-center gap-2 flex-wrap">
                         <span className="text-sm font-semibold text-text-primary">{alert.variantName}</span>
                         {isZero && <Badge variant="destructive" className="scale-75 origin-left tracking-widest text-[10px]">SIN STOCK</Badge>}
                       </div>
-                      <span className="text-xs text-text-secondary break-words line-clamp-2 mt-0.5">{alert.productName}</span>
+                      <span className="text-xs text-text-secondary truncate mt-0.5">{alert.productName}</span>
                     </div>
-                    <div className="flex items-baseline gap-1 flex-shrink-0 bg-surface px-2 py-1 rounded-md border border-border/50">
-                      <span className={`text-sm font-bold ${isZero ? 'text-destructive' : 'text-warning'}`}>{alert.currentStock}</span>
-                      <span className="text-xs text-text-secondary font-medium">/ {alert.minimumStock}</span>
+                    <div className="flex items-center gap-2 flex-shrink-0">
+                      <div className="flex items-baseline gap-0.5 bg-surface px-2 py-1 rounded-md border border-border/50">
+                        <span className={`text-sm font-bold ${isZero ? 'text-destructive' : 'text-warning'}`}>{alert.currentStock}</span>
+                        <span className="text-xs text-text-secondary font-medium">/{alert.minimumStock}</span>
+                      </div>
+                      <Link
+                        href={`/inventory/products?expand=${alert.productId}`}
+                        className="px-2.5 py-1.5 rounded-lg bg-primary/10 text-primary text-xs font-bold hover:bg-primary/20 transition-colors whitespace-nowrap"
+                      >
+                        Ir a stock
+                      </Link>
                     </div>
                   </div>
                 );

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useCallback, useMemo } from "react";
+import { useSearchParams } from "next/navigation";
 import { Plus, Search } from "lucide-react";
 import { ProductRow } from "./ProductRow";
 import { ProductModal } from "./ProductModal";
@@ -71,6 +72,12 @@ export default function ProductsPage() {
   const [expandedProductId, setExpandedProductId] = useState<string | null>(null);
   const [modal, setModal] = useState<ModalState>({ type: "none" });
   const [query, setQuery] = useState("");
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    const expand = searchParams.get("expand");
+    if (expand) setExpandedProductId(expand);
+  }, [searchParams]);
 
   const fetchProducts = useCallback(async () => {
     setLoading(true);
