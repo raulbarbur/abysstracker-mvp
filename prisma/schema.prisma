@@ -69,15 +69,21 @@ enum SaleStatus {
   CANCELLED
 }
 
+enum PaymentMethod {
+  CASH
+  TRANSFER
+}
+
 model Sale {
-  id                 String     @id @default(cuid())
+  id                 String         @id @default(cuid())
   userId             String
-  status             SaleStatus @default(ACTIVE)
+  status             SaleStatus     @default(ACTIVE)
+  paymentMethod      PaymentMethod?
   cancellationReason String?
   cancellationDate   DateTime?
   cancelledByUserId  String?
   date               DateTime
-  createdAt          DateTime   @default(now())
+  createdAt          DateTime       @default(now())
 
   user             User       @relation("SaleUser", fields: [userId], references: [id])
   cancelledByUser  User?      @relation("SaleCancelledBy", fields: [cancelledByUserId], references: [id])

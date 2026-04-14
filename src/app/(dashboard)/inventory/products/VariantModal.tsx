@@ -17,6 +17,7 @@ export function VariantModal({ product, variant, isOpen, onClose, onSuccess }: V
   const [price, setPrice] = useState("");
   const [costPrice, setCostPrice] = useState("");
   const [minStock, setMinStock] = useState("0");
+  const [initialStock, setInitialStock] = useState("0");
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
   const [apiError, setApiError] = useState("");
@@ -27,6 +28,7 @@ export function VariantModal({ product, variant, isOpen, onClose, onSuccess }: V
       setPrice(variant ? String(typeof variant.currentPrice === "string" ? parseFloat(variant.currentPrice) : variant.currentPrice) : "");
       setCostPrice(variant ? String(typeof variant.costPrice === "string" ? parseFloat(variant.costPrice) : variant.costPrice) : "0");
       setMinStock(variant ? String(variant.minimumStock) : "0");
+      setInitialStock("0");
       setErrors({});
       setApiError("");
     }
@@ -55,12 +57,21 @@ export function VariantModal({ product, variant, isOpen, onClose, onSuccess }: V
     setLoading(true);
     setApiError("");
     try {
-      const body = {
+      const body: {
+        name: string;
+        currentPrice: number;
+        costPrice: number;
+        minimumStock: number;
+        initialStock?: number;
+      } = {
         name: name.trim(),
         currentPrice: parseFloat(price),
         costPrice: parseFloat(costPrice),
         minimumStock: parseInt(minStock)
       };
+      if (!variant) {
+        body.initialStock = parseInt(initialStock) || 0;
+      }
       const res = variant
         ? await fetch(`/api/variants/${variant.id}`, { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) })
         : await fetch(`/api/products/${product.id}/variants`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
@@ -140,6 +151,22 @@ export function VariantModal({ product, variant, isOpen, onClose, onSuccess }: V
             <p className="text-xs text-text-secondary font-semibold">Ingrese 0 para desactivar las alertas de stock para esta variante.</p>
           </div>
         </div>
+
+        {!variant && (
+          <div className="flex flex-col gap-2">
+            <label className="font-bold text-md text-text-primary">Stock inicial</label>
+            <input
+              type="number"
+              value={initialStock}
+              onChange={e => setInitialStock(e.target.value)}
+              min="0"
+              step="1"
+              placeholder="0"
+              className="w-full px-4 py-4 rounded-xl border-2 bg-base font-semibold text-text-primary focus:outline-none focus:ring-4 transition-all border-border focus:ring-primary/20 focus:border-primary"
+            />
+            <p className="text-xs text-text-secondary font-semibold">Cantidad de unidades disponibles al crear la variante.</p>
+          </div>
+        )}
 
         <div className="flex gap-3 pt-2">
           <button onClick={onClose} className="flex-1 py-4 font-bold border-2 border-border rounded-xl text-text-secondary hover:bg-hover transition-all">

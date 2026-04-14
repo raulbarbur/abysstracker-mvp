@@ -11,6 +11,7 @@ const createProductSchema = z.object({
     costPrice: z.number().min(0, "Costo inválido"),
     currentPrice: z.number().min(0.01, "Precio de venta inválido"),
     minimumStock: z.number().int().min(0),
+    initialStock: z.number().int().min(0).optional().default(0),
   })).optional()
 });
 
@@ -73,6 +74,7 @@ export async function POST(request: NextRequest) {
             name: v.name,
             costPrice: v.costPrice,
             currentPrice: v.currentPrice,
+            currentStock: v.initialStock ?? 0,
             minimumStock: v.minimumStock,
             active: true
           }))
@@ -80,6 +82,24 @@ export async function POST(request: NextRequest) {
       },
       include: { variants: true }
     });
+
+    // Create stock movements for variants with initial stock
+    if (variants && variants.length > 0) {
+      for (const variant of newProduct.variants) {
+        const def = variants.find(v => v.name === variant.name);
+        if (def && def.initialStock && def.initialStock > 0) {
+          await prisma.stockMovement.create({
+            data: {
+              variantId: variant.id,
+              type: 'IN',
+              quantity: def.initialStock,
+              reason: 'Stock inicial',
+              userId: authUser.userId
+            }
+          });
+        }
+      }
+    }
 
     await createAuditLog(prisma, {
       entity: 'Product',

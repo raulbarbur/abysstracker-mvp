@@ -9,6 +9,7 @@ const createVariantSchema = z.object({
   costPrice: z.number().min(0, "El coste debe ser mayor o igual a 0").optional().default(0),
   currentPrice: z.number().gt(0, "El precio debe ser mayor a 0"),
   minimumStock: z.number().int().min(0, "El stock mínimo debe ser 0 o mayor").optional().default(0),
+  initialStock: z.number().int().min(0).optional().default(0),
 });
 
 export async function POST(request: NextRequest, { params }: { params: { id: string } }) {
@@ -30,7 +31,7 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
       return NextResponse.json({ error: parsed.error.issues[0]?.message || "Datos inválidos" }, { status: 400 });
     }
 
-    const { name, costPrice, currentPrice, minimumStock } = parsed.data;
+    const { name, costPrice, currentPrice, minimumStock, initialStock } = parsed.data;
 
     const product = await prisma.product.findUnique({ where: { id: productId } });
     if (!product || !product.active) {
@@ -50,11 +51,23 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
         name,
         costPrice,
         currentPrice,
-        currentStock: 0,
+        currentStock: initialStock ?? 0,
         minimumStock,
         active: true
       }
     });
+
+    if (initialStock && initialStock > 0) {
+      await prisma.stockMovement.create({
+        data: {
+          variantId: newVariant.id,
+          type: 'IN',
+          quantity: initialStock,
+          reason: 'Stock inicial',
+          userId: authUser.userId
+        }
+      });
+    }
 
     await createAuditLog(prisma, {
       entity: 'Variant',

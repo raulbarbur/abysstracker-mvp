@@ -14,14 +14,14 @@ interface ProductModalProps {
 
 export function ProductModal({ product, isOpen, onClose, onSuccess }: ProductModalProps) {
   const [name, setName] = useState("");
-  const [variants, setVariants] = useState([{ name: "Única", costPrice: "", currentPrice: "", minimumStock: "0" }]);
+  const [variants, setVariants] = useState([{ name: "Única", costPrice: "", currentPrice: "", minimumStock: "0", initialStock: "0" }]);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (isOpen) {
       setName(product?.name || "");
-      setVariants([{ name: "Única", costPrice: "", currentPrice: "", minimumStock: "0" }]);
+      setVariants([{ name: "Única", costPrice: "", currentPrice: "", minimumStock: "0", initialStock: "0" }]);
       setError("");
     }
   }, [isOpen, product]);
@@ -56,6 +56,7 @@ export function ProductModal({ product, isOpen, onClose, onSuccess }: ProductMod
           costPrice: number;
           currentPrice: number;
           minimumStock: number;
+          initialStock: number;
         }[];
       } = { name: name.trim() };
       
@@ -64,7 +65,8 @@ export function ProductModal({ product, isOpen, onClose, onSuccess }: ProductMod
           name: v.name.trim(),
           costPrice: parseFloat(v.costPrice),
           currentPrice: parseFloat(v.currentPrice),
-          minimumStock: parseInt(v.minimumStock) || 0
+          minimumStock: parseInt(v.minimumStock) || 0,
+          initialStock: parseInt(v.initialStock) || 0
         }));
       }
 
@@ -106,7 +108,7 @@ export function ProductModal({ product, isOpen, onClose, onSuccess }: ProductMod
               <label className="font-bold text-md text-text-primary">Variantes Iniciales</label>
               <button
                 type="button"
-                onClick={() => setVariants([...variants, { name: "", costPrice: "", currentPrice: "", minimumStock: "0" }])}
+                onClick={() => setVariants([...variants, { name: "", costPrice: "", currentPrice: "", minimumStock: "0", initialStock: "0" }])}
                 className="text-primary font-bold text-sm flex items-center gap-1 hover:underline"
               >
                 <Plus size={16} /> Agregar variante
@@ -115,62 +117,103 @@ export function ProductModal({ product, isOpen, onClose, onSuccess }: ProductMod
             
             <div className="flex flex-col gap-2">
               {variants.map((variant, index) => (
-                <div key={index} className="flex gap-2 items-end bg-base p-3 rounded-xl border border-border">
-                  <div className="flex-1 flex flex-col gap-1">
-                    <label className="text-xs font-bold text-text-secondary">Nombre</label>
-                    <input
-                      type="text"
-                      value={variant.name}
-                      onChange={e => {
-                        const newVars = [...variants];
-                        newVars[index].name = e.target.value;
-                        setVariants(newVars);
-                        setError("");
-                      }}
-                      placeholder="Ej: Talle M"
-                      className="w-full px-3 py-2 rounded-lg border bg-surface text-text-primary focus:outline-none focus:border-primary text-sm font-medium"
-                    />
+                <div key={index} className="flex flex-col gap-2 bg-base p-3 rounded-xl border border-border">
+                  {/* Fila 1: nombre + eliminar */}
+                  <div className="flex gap-2 items-end">
+                    <div className="flex-1 flex flex-col gap-1">
+                      <label className="text-xs font-bold text-text-secondary">Nombre</label>
+                      <input
+                        type="text"
+                        value={variant.name}
+                        onChange={e => {
+                          const newVars = [...variants];
+                          newVars[index].name = e.target.value;
+                          setVariants(newVars);
+                          setError("");
+                        }}
+                        placeholder="Ej: Talle M"
+                        className="w-full px-3 py-2 rounded-lg border bg-surface text-text-primary focus:outline-none focus:border-primary text-sm font-medium"
+                      />
+                    </div>
+                    {variants.length > 1 && (
+                      <button
+                        onClick={() => setVariants(variants.filter((_, i) => i !== index))}
+                        className="p-2 mb-[1px] text-destructive hover:bg-destructive/10 rounded-lg transition-colors flex-shrink-0"
+                      >
+                        <Trash2 size={18} />
+                      </button>
+                    )}
                   </div>
-                  <div className="w-24 flex flex-col gap-1">
-                    <label className="text-xs font-bold text-text-secondary">Coste ($)</label>
-                    <input
-                      type="number"
-                      value={variant.costPrice}
-                      onChange={e => {
-                        const newVars = [...variants];
-                        newVars[index].costPrice = e.target.value;
-                        setVariants(newVars);
-                        setError("");
-                      }}
-                      placeholder="0.00"
-                      min="0" step="0.01"
-                      className="w-full px-3 py-2 rounded-lg border bg-surface text-text-primary focus:outline-none focus:border-primary text-sm font-medium"
-                    />
+                  {/* Fila 2: precios */}
+                  <div className="flex gap-2">
+                    <div className="flex-1 flex flex-col gap-1">
+                      <label className="text-xs font-bold text-text-secondary">Coste ($)</label>
+                      <input
+                        type="number"
+                        value={variant.costPrice}
+                        onChange={e => {
+                          const newVars = [...variants];
+                          newVars[index].costPrice = e.target.value;
+                          setVariants(newVars);
+                          setError("");
+                        }}
+                        placeholder="0.00"
+                        min="0" step="0.01"
+                        className="w-full px-3 py-2 rounded-lg border bg-surface text-text-primary focus:outline-none focus:border-primary text-sm font-medium"
+                      />
+                    </div>
+                    <div className="flex-1 flex flex-col gap-1">
+                      <label className="text-xs font-bold text-text-secondary">Venta ($)</label>
+                      <input
+                        type="number"
+                        value={variant.currentPrice}
+                        onChange={e => {
+                          const newVars = [...variants];
+                          newVars[index].currentPrice = e.target.value;
+                          setVariants(newVars);
+                          setError("");
+                        }}
+                        placeholder="0.00"
+                        min="0.01" step="0.01"
+                        className="w-full px-3 py-2 rounded-lg border bg-surface text-text-primary focus:outline-none focus:border-primary text-sm font-medium"
+                      />
+                    </div>
                   </div>
-                  <div className="w-24 flex flex-col gap-1">
-                    <label className="text-xs font-bold text-text-secondary">Venta ($)</label>
-                    <input
-                      type="number"
-                      value={variant.currentPrice}
-                      onChange={e => {
-                        const newVars = [...variants];
-                        newVars[index].currentPrice = e.target.value;
-                        setVariants(newVars);
-                        setError("");
-                      }}
-                      placeholder="0.00"
-                      min="0.01" step="0.01"
-                      className="w-full px-3 py-2 rounded-lg border bg-surface text-text-primary focus:outline-none focus:border-primary text-sm font-medium"
-                    />
+                  {/* Fila 3: stocks */}
+                  <div className="flex gap-2">
+                    <div className="flex-1 flex flex-col gap-1">
+                      <label className="text-xs font-bold text-text-secondary">Stock mín.</label>
+                      <input
+                        type="number"
+                        value={variant.minimumStock}
+                        onChange={e => {
+                          const newVars = [...variants];
+                          newVars[index].minimumStock = e.target.value;
+                          setVariants(newVars);
+                          setError("");
+                        }}
+                        placeholder="0"
+                        min="0" step="1"
+                        className="w-full px-3 py-2 rounded-lg border bg-surface text-text-primary focus:outline-none focus:border-primary text-sm font-medium"
+                      />
+                    </div>
+                    <div className="flex-1 flex flex-col gap-1">
+                      <label className="text-xs font-bold text-text-secondary">Stock ini.</label>
+                      <input
+                        type="number"
+                        value={variant.initialStock}
+                        onChange={e => {
+                          const newVars = [...variants];
+                          newVars[index].initialStock = e.target.value;
+                          setVariants(newVars);
+                          setError("");
+                        }}
+                        placeholder="0"
+                        min="0" step="1"
+                        className="w-full px-3 py-2 rounded-lg border bg-surface text-text-primary focus:outline-none focus:border-primary text-sm font-medium"
+                      />
+                    </div>
                   </div>
-                  {variants.length > 1 && (
-                    <button
-                      onClick={() => setVariants(variants.filter((_, i) => i !== index))}
-                      className="p-2 mb-[1px] text-destructive hover:bg-destructive/10 rounded-lg transition-colors"
-                    >
-                      <Trash2 size={18} />
-                    </button>
-                  )}
                 </div>
               ))}
             </div>
