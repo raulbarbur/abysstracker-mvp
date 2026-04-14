@@ -10,7 +10,7 @@ interface PreferencesContextType {
   setFontSize: (fs: FontSizePreference) => void;
   toggleTheme: () => void;
   toggleFontSize: () => void;
-  persistPreferences: () => Promise<boolean>;
+  persistPreferences: (overrides?: { theme?: ThemePreference; fontSize?: FontSizePreference }) => Promise<boolean>;
 }
 
 const PreferencesContext = createContext<PreferencesContextType | undefined>(undefined);
@@ -40,12 +40,12 @@ export function PreferencesProvider({
     document.documentElement.setAttribute("data-font-size", fs);
   };
 
-  const persistPreferences = async () => {
+  const persistPreferences = async (overrides?: { theme?: ThemePreference; fontSize?: FontSizePreference }) => {
     try {
       const res = await fetch('/api/preferences', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ theme, fontSize })
+        body: JSON.stringify({ theme: overrides?.theme ?? theme, fontSize: overrides?.fontSize ?? fontSize })
       });
       return res.ok;
     } catch (e) {

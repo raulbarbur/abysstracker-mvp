@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { prisma } from '@/lib/prisma';
 import { generateJWT } from '@/lib/auth';
 import { verifyPassword } from '@/lib/passwords';
+import { getUserPreferences } from '@/lib/preferences';
 
 export const dynamic = 'force-dynamic';
 
@@ -60,14 +61,28 @@ export async function POST(request: NextRequest) {
       createdAt: user.createdAt,
     });
 
-    response.cookies.set({
-      name: 'auth-token',
-      value: token,
+    response.cookies.set('auth-token', token, {
       httpOnly: true,
       sameSite: 'strict',
       path: '/',
       maxAge: 28800, // 8 hours
     });
+
+    // Set preference cookies so the root layout applies them immediately.
+    // Non-critical: if this fails the login still succeeds.
+    try {
+      const prefs = await getUserPreferences(user.id);
+      const cookieOpts = {
+        httpOnly: true,
+        sameSite: 'strict' as const,
+        path: '/',
+        maxAge: 60 * 60 * 24 * 30,
+      };
+      response.cookies.set('pref_theme', prefs.theme, cookieOpts);
+      response.cookies.set('pref_font_size', prefs.fontSize, cookieOpts);
+    } catch {
+      // Preference cookies are optional — login still works without them
+    }
 
     return response;
   } catch {

@@ -11,7 +11,13 @@ interface SettingsModalProps {
 }
 
 export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
-  const { fontSize, setFontSize } = usePreferences();
+  const { fontSize, setFontSize, persistPreferences } = usePreferences();
+
+  const handleFontSize = async (fs: "normal" | "large") => {
+    if (fs === fontSize) return;
+    setFontSize(fs);
+    await persistPreferences({ fontSize: fs });
+  };
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Tamaño de Fuente">
@@ -23,10 +29,10 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
           </h3>
           <div className="grid grid-cols-2 gap-3">
             <button
-              onClick={() => setFontSize("normal")}
+              onClick={() => handleFontSize("normal")}
               className={`p-4 rounded-xl border flex flex-col justify-center items-center gap-2 transition-all active:scale-95 ${
-                fontSize === "normal" 
-                  ? "bg-primary/10 border-primary text-primary shadow-sm" 
+                fontSize === "normal"
+                  ? "bg-primary/10 border-primary text-primary shadow-sm"
                   : "bg-surface border-border text-text-secondary hover:bg-hover hover:text-text-primary"
               }`}
             >
@@ -34,10 +40,10 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
               <span className="font-medium text-xs">Normal</span>
             </button>
             <button
-              onClick={() => setFontSize("large")}
+              onClick={() => handleFontSize("large")}
               className={`p-4 rounded-xl border flex flex-col justify-center items-center gap-2 transition-all active:scale-95 ${
-                fontSize === "large" 
-                  ? "bg-primary/10 border-primary text-primary shadow-sm" 
+                fontSize === "large"
+                  ? "bg-primary/10 border-primary text-primary shadow-sm"
                   : "bg-surface border-border text-text-secondary hover:bg-hover hover:text-text-primary"
               }`}
             >
