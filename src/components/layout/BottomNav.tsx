@@ -14,12 +14,12 @@ export function BottomNav() {
     >
       <Link href="/dashboard" className={`flex flex-col items-center justify-center flex-1 h-full pt-1 pb-1 ${pathname === '/dashboard' ? 'text-primary' : 'text-text-secondary'}`}>
         <LayoutDashboard size={20} />
-        <span className="text-[10px] mt-1 font-medium">Inicio</span>
+        <span className="text-xs mt-1 font-medium">Inicio</span>
       </Link>
 
       <Link href="/sales" className={`flex flex-col items-center justify-center flex-1 h-full pt-1 pb-1 ${pathname === '/sales' ? 'text-primary' : 'text-text-secondary'}`}>
         <ClipboardList size={20} />
-        <span className="text-[10px] mt-1 font-medium">Ventas</span>
+        <span className="text-xs mt-1 font-medium">Ventas</span>
       </Link>
 
       {/* Botón Flotante Central (FAB) */}
@@ -34,12 +34,12 @@ export function BottomNav() {
 
       <Link href="/stock" className={`flex flex-col items-center justify-center flex-1 h-full pt-1 pb-1 ${pathname === '/stock' ? 'text-primary' : 'text-text-secondary'}`}>
         <Package size={20} />
-        <span className="text-[10px] mt-1 font-medium">Inventario</span>
+        <span className="text-xs mt-1 font-medium">Inventario</span>
       </Link>
 
       <Link href="/exports" className={`flex flex-col items-center justify-center flex-1 h-full pt-1 pb-1 ${pathname === '/exports' ? 'text-primary' : 'text-text-secondary'}`}>
         <Download size={20} />
-        <span className="text-[10px] mt-1 font-medium">Exports</span>
+        <span className="text-xs mt-1 font-medium">Exports</span>
       </Link>
     </nav>
   );

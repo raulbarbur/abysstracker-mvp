@@ -84,7 +84,7 @@ export function CancelModal({ saleId, isOpen, onClose, onSuccess }: CancelModalP
          <div className="flex flex-col mb-2 md:mb-4 bg-surface p-4 md:p-5 rounded-2xl md:rounded-xl border border-border shadow-sm">
            <label className="font-bold text-text-primary text-md mb-2 md:mb-3 flex justify-between items-center">
              Declaración de Anulación
-             <span className={`text-[10px] md:text-xs font-black bg-base px-2 py-0.5 rounded border border-border ${isOverLimit ? 'text-destructive' : 'text-text-secondary'}`}>
+             <span className={`text-xs font-black bg-base px-2 py-0.5 rounded border border-border ${isOverLimit ? 'text-destructive' : 'text-text-secondary'}`}>
                {reason.length} / 500
              </span>
            </label>

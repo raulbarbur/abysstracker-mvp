@@ -4,6 +4,7 @@ import React from "react";
 import { Type } from "lucide-react";
 import { Modal } from "../ui/Modal";
 import { usePreferences } from "../preferences-provider";
+import { useToast } from "../ui/Toast";
 
 interface SettingsModalProps {
   isOpen: boolean;
@@ -12,11 +13,16 @@ interface SettingsModalProps {
 
 export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
   const { fontSize, setFontSize, persistPreferences } = usePreferences();
+  const { toast } = useToast();
 
   const handleFontSize = async (fs: "normal" | "large") => {
     if (fs === fontSize) return;
     setFontSize(fs);
-    await persistPreferences({ fontSize: fs });
+    const ok = await persistPreferences({ fontSize: fs });
+    if (!ok) {
+      setFontSize(fontSize);
+      toast({ variant: "error", title: "Error al guardar", message: "No se pudo guardar la preferencia. Intentá de nuevo." });
+    }
   };
 
   return (

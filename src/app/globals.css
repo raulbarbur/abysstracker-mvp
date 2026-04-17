@@ -30,6 +30,9 @@
   --text-lg: var(--font-size-lg);
   --text-xl: var(--font-size-xl);
   --text-2xl: var(--font-size-2xl);
+  --text-3xl: var(--font-size-3xl);
+  --text-4xl: var(--font-size-4xl);
+  --text-5xl: var(--font-size-5xl);
   
   --shadow-sm: var(--shadow-val-sm);
   --shadow-md: var(--shadow-val-md);
@@ -61,6 +64,9 @@
     --font-size-lg: 18px;
     --font-size-xl: 22px;
     --font-size-2xl: 28px;
+    --font-size-3xl: 30px;
+    --font-size-4xl: 38px;
+    --font-size-5xl: 48px;
   }
   
   [data-font-size="normal"] {
@@ -71,6 +77,9 @@
     --font-size-lg: 18px;
     --font-size-xl: 22px;
     --font-size-2xl: 28px;
+    --font-size-3xl: 30px;
+    --font-size-4xl: 38px;
+    --font-size-5xl: 48px;
   }
 
   [data-font-size="large"] {
@@ -81,6 +90,9 @@
     --font-size-lg: 28px;
     --font-size-xl: 34px;
     --font-size-2xl: 42px;
+    --font-size-3xl: 44px;
+    --font-size-4xl: 56px;
+    --font-size-5xl: 70px;
   }
   
   .dark {
@@ -163,6 +175,9 @@
 .text-lg   { font-size: var(--font-size-lg);   }
 .text-xl   { font-size: var(--font-size-xl);   }
 .text-2xl  { font-size: var(--font-size-2xl);  }
+.text-3xl  { font-size: var(--font-size-3xl);  }
+.text-4xl  { font-size: var(--font-size-4xl);  }
+.text-5xl  { font-size: var(--font-size-5xl);  }
 
 /* ─── Dark mode fixes for portal elements (modals) ───────────────────────
    Tailwind v4 may compile @theme utilities with static light-mode values.

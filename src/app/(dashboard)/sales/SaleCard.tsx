@@ -155,7 +155,7 @@ export function SaleCard({ sale, isExpanded, onToggleExpand, onCancelClick }: Sa
                     <span className="font-black text-md sm:text-lg md:text-xl text-text-primary tracking-tighter capitalize leading-none">{formattedDateStr}</span>
                     <span className="font-bold text-xs sm:text-sm text-text-secondary leading-none">{formattedTimeStr}</span>
                   </div>
-                  <span className={`text-[10px] md:text-xs font-bold px-2 py-0.5 rounded-md uppercase tracking-wider flex-shrink-0 whitespace-nowrap w-max ${isActive ? 'bg-success/15 text-success' : 'bg-destructive/15 text-destructive'}`}>
+                  <span className={`text-xs font-bold px-2 py-0.5 rounded-md uppercase tracking-wider flex-shrink-0 whitespace-nowrap w-max ${isActive ? 'bg-success/15 text-success' : 'bg-destructive/15 text-destructive'}`}>
                     {isActive ? "ACTIVA" : "ANULADA"}
                   </span>
                 </div>
@@ -164,7 +164,7 @@ export function SaleCard({ sale, isExpanded, onToggleExpand, onCancelClick }: Sa
                     <ShoppingBag size={12} className="md:w-3.5 md:h-3.5" />
                     <span className="leading-none">{totalItems} art.</span>
                   </div>
-                  {sale.invoice?.invoiceNumber ? <span className="font-mono bg-border/40 border border-border/60 px-1.5 py-0.5 rounded text-[10px] text-text-primary shadow-sm leading-none flex-shrink-0 whitespace-nowrap">#{sale.invoice.invoiceNumber}</span> : null}
+                  {sale.invoice?.invoiceNumber ? <span className="font-mono bg-border/40 border border-border/60 px-1.5 py-0.5 rounded text-xs text-text-primary shadow-sm leading-none flex-shrink-0 whitespace-nowrap">#{sale.invoice.invoiceNumber}</span> : null}
                   <span className="break-words line-clamp-2 max-w-[80px] sm:max-w-[150px] flex-shrink-0">{sale.user.username}</span>
                 </div>
              </div>
@@ -193,10 +193,10 @@ export function SaleCard({ sale, isExpanded, onToggleExpand, onCancelClick }: Sa
                   <span className="font-bold text-sm text-text-secondary leading-none">{formattedTimeStr}</span>
                 </div>
                 <div className="flex items-center gap-2 mt-2">
-                  <span className={`text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider ${isActive ? 'bg-success/15 text-success' : 'bg-destructive/15 text-destructive'}`}>
+                  <span className={`text-xs font-bold px-2 py-0.5 rounded uppercase tracking-wider ${isActive ? 'bg-success/15 text-success' : 'bg-destructive/15 text-destructive'}`}>
                     {isActive ? "ACTIVA" : "ANULADA"}
                   </span>
-                  {sale.invoice?.invoiceNumber ? <span className="font-mono bg-border/40 border border-border/60 px-1.5 py-0.5 rounded text-[10px] text-text-primary shadow-sm leading-none font-bold">Ticket #{sale.invoice.invoiceNumber}</span> : null}
+                  {sale.invoice?.invoiceNumber ? <span className="font-mono bg-border/40 border border-border/60 px-1.5 py-0.5 rounded text-xs text-text-primary shadow-sm leading-none font-bold">Ticket #{sale.invoice.invoiceNumber}</span> : null}
                 </div>
               </div>
               <button onClick={onToggleExpand} className="p-3 bg-surface border border-border rounded-full hover:bg-hover active:scale-95 transition-transform">

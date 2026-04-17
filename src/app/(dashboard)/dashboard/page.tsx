@@ -226,7 +226,7 @@ export default function DashboardIndexPage() {
                     <span className="text-text-disabled font-bold text-sm w-3 text-center group-hover:text-primary transition-colors">{i + 1}</span>
                     <div className="flex flex-col">
                       <span className="text-sm font-bold text-text-primary leading-tight">{v.productName}</span>
-                      <span className="text-[10px] text-text-secondary font-semibold uppercase tracking-wide truncate max-w-[150px]">{v.variantName}</span>
+                      <span className="text-xs text-text-secondary font-semibold uppercase tracking-wide truncate max-w-[150px]">{v.variantName}</span>
                     </div>
                   </div>
                   <span className="font-bold text-primary text-sm flex-shrink-0 bg-primary/10 px-2 py-0.5 rounded-md">{v.totalQuantitySold}</span>
@@ -259,7 +259,7 @@ export default function DashboardIndexPage() {
                     <div className="flex flex-col flex-1 pr-3 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
                         <span className="text-sm font-semibold text-text-primary">{alert.variantName}</span>
-                        {isZero && <Badge variant="destructive" className="scale-75 origin-left tracking-widest text-[10px]">SIN STOCK</Badge>}
+                        {isZero && <Badge variant="destructive" className="scale-75 origin-left tracking-widest text-xs">SIN STOCK</Badge>}
                       </div>
                       <span className="text-xs text-text-secondary truncate mt-0.5">{alert.productName}</span>
                     </div>
@@ -348,13 +348,13 @@ export default function DashboardIndexPage() {
                 return (
                   <div key={m.id} className="flex items-center justify-between border-b border-border/50 pb-3 last:border-0 last:pb-0 group">
                     <div className="flex items-center gap-3">
-                      <span className={`inline-flex items-center px-2 py-1 rounded-lg border text-[10px] uppercase font-black tracking-widest flex-shrink-0 ${badgeClass}`}>
+                      <span className={`inline-flex items-center px-2 py-1 rounded-lg border text-xs uppercase font-black tracking-widest flex-shrink-0 ${badgeClass}`}>
                         {typeLabel}
                       </span>
                       <div className="flex flex-col min-w-0">
                         <span className="text-sm font-bold text-text-primary leading-tight group-hover:text-primary transition-colors truncate">{m.productName}</span>
                         <div className="flex items-center gap-1.5 mt-0.5">
-                          <span className={`text-[10px] text-text-secondary font-semibold uppercase tracking-wide truncate max-w-[100px]`}>{m.variantName}</span>
+                          <span className={`text-xs text-text-secondary font-semibold uppercase tracking-wide truncate max-w-[100px]`}>{m.variantName}</span>
                           <span className={`text-xs font-black tabular-nums ${qtyClass}`}>{sign}{m.quantity}</span>
                           <span className="text-xs text-text-secondary truncate"><span className="text-text-disabled mx-0.5">•</span> por <span className="font-medium text-text-primary/70">{m.username}</span></span>
                         </div>

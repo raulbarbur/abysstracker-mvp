@@ -157,7 +157,7 @@ export default function ProductsPage() {
                   ) : (
                     <h2 className="text-xl font-bold text-gray-100 flex items-center gap-3">
                       {product.name}
-                      {!product.active && <span className="text-[10px] px-2 py-0.5 rounded shadow-inner uppercase tracking-wider font-black bg-red-500/20 text-red-500 border border-red-500/20">Inactivo</span>}
+                      {!product.active && <span className="text-xs px-2 py-0.5 rounded shadow-inner uppercase tracking-wider font-black bg-red-500/20 text-red-500 border border-red-500/20">Inactivo</span>}
                       <button onClick={() => startEditingProduct(product)} className="text-sm font-medium text-gray-500 hover:text-blue-400 transition-colors bg-gray-800/50 px-2 py-0.5 rounded-md border border-gray-700 flex items-center gap-1"><Pencil className="w-3.5 h-3.5" /> Editar</button>
                     </h2>
                   )}
@@ -181,7 +181,7 @@ export default function ProductsPage() {
                 ) : (
                   <table className="w-full text-left text-sm whitespace-nowrap">
                     <thead className="bg-gray-950/50">
-                      <tr className="text-gray-500 border-b border-gray-800/80 uppercase tracking-wider text-[10px] font-black">
+                      <tr className="text-gray-500 border-b border-gray-800/80 uppercase tracking-wider text-xs font-black">
                         <th className="px-5 py-3 font-medium">Nombre</th>
                         <th className="px-5 py-3 font-medium text-right">Precio Actual</th>
                         <th className="px-5 py-3 font-medium text-right">Stock</th>
@@ -197,7 +197,7 @@ export default function ProductsPage() {
                           <td className="px-5 py-3 text-right font-mono font-bold text-gray-200">{variant.currentStock.toLocaleString('es-AR')}</td>
                           <td className="px-5 py-3 text-right font-mono font-bold text-gray-500">{variant.minimumStock.toLocaleString('es-AR')}</td>
                           <td className="px-5 py-3 text-center">
-                            <span className={`text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded shadow-sm ${variant.active ? 'bg-green-500/10 text-green-500 border border-green-500/20' : 'bg-red-500/10 text-red-500 border border-red-500/20'}`}>
+                            <span className={`text-xs uppercase font-bold tracking-wider px-2 py-0.5 rounded shadow-sm ${variant.active ? 'bg-green-500/10 text-green-500 border border-green-500/20' : 'bg-red-500/10 text-red-500 border border-red-500/20'}`}>
                               {variant.active ? 'Activo' : 'Inactivo'}
                             </span>
                           </td>

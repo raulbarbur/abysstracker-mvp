@@ -108,7 +108,7 @@ export default function StockPage() {
           </div>
           <div className="overflow-x-auto flex-1 h-full custom-scrollbar">
             <table className="w-full text-left text-sm whitespace-nowrap">
-              <thead className="bg-gray-950 text-gray-500 uppercase tracking-widest text-[10px] font-black sticky top-0 z-10 shadow-md">
+              <thead className="bg-gray-950 text-gray-500 uppercase tracking-widest text-xs font-black sticky top-0 z-10 shadow-md">
                 <tr>
                   <th className="px-6 py-4">Producto</th>
                   <th className="px-6 py-4">Variante</th>
@@ -128,7 +128,7 @@ export default function StockPage() {
                       <td className="px-6 py-4 font-bold text-gray-400 text-xs uppercase tracking-wider">{s.productName}</td>
                       <td className="px-6 py-4 font-bold text-gray-200">
                          {s.variantName}
-                         {isLow && <span className="ml-3 text-[9px] bg-orange-500/10 text-orange-500 px-2 py-0.5 rounded shadow-[0_0_10px_rgba(249,115,22,0.2)] border border-orange-500/30 font-black uppercase tracking-widest">Alerta crítico</span>}
+                         {isLow && <span className="ml-3 text-xs bg-orange-500/10 text-orange-500 px-2 py-0.5 rounded shadow-[0_0_10px_rgba(249,115,22,0.2)] border border-orange-500/30 font-black uppercase tracking-widest">Alerta crítico</span>}
                       </td>
                       <td className="px-6 py-4 text-right font-mono font-black text-xl">
                         <span className={isLow ? "text-orange-400" : "text-green-400"}>{s.currentStock}</span>
@@ -152,7 +152,7 @@ export default function StockPage() {
           </div>
           <div className="overflow-x-auto flex-1 h-full custom-scrollbar">
             <table className="w-full text-left text-sm whitespace-nowrap">
-              <thead className="bg-gray-950 text-gray-500 uppercase tracking-widest text-[10px] font-black sticky top-0 z-10 shadow-md">
+              <thead className="bg-gray-950 text-gray-500 uppercase tracking-widest text-xs font-black sticky top-0 z-10 shadow-md">
                 <tr>
                   <th className="px-6 py-4">Fecha</th>
                   <th className="px-6 py-4">Tipo</th>
@@ -171,7 +171,7 @@ export default function StockPage() {
                       {new Date(m.createdAt).toLocaleString("es-ES", { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
                     </td>
                     <td className="px-6 py-4">
-                      <span className={`text-[10px] font-black tracking-widest uppercase px-2.5 py-1 rounded shadow-inner ${
+                      <span className={`text-xs font-black tracking-widest uppercase px-2.5 py-1 rounded shadow-inner ${
                           m.type === 'IN' ? 'bg-green-500/20 text-green-400 border border-green-500/20' :
                           m.type === 'OUT' ? 'bg-red-500/20 text-red-400 border border-red-500/20' :
                           m.type === 'LOSS' ? 'bg-orange-500/20 text-orange-400 border border-orange-500/20' :
@@ -182,7 +182,7 @@ export default function StockPage() {
                     </td>
                     <td className="px-6 py-4">
                       <p className="font-bold text-gray-200">{m.variantName}</p>
-                      <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest">{m.username}</p>
+                      <p className="text-xs text-gray-500 font-bold uppercase tracking-widest">{m.username}</p>
                     </td>
                     <td className={`px-6 py-4 text-right font-mono font-black text-xl leading-none ${m.type === 'IN' || m.quantity > 0 ? 'text-green-400' : 'text-red-400'}`}>
                        {m.type === 'LOSS' || m.type === 'OUT' ? '-' : (m.type === 'IN' || m.quantity > 0 ? '+' : '')}{m.quantity}
@@ -222,7 +222,7 @@ export default function StockPage() {
                 <div>
                   <label className="block text-sm font-bold tracking-wide text-gray-400 mb-2">Modificador</label>
                   <input type="number" value={moveForm.quantity || ''} onChange={e => setMoveForm({...moveForm, quantity: Number(e.target.value)})} required className="w-full px-4 py-3 bg-gray-950 border border-gray-800 rounded-xl text-white font-mono font-bold focus:outline-none focus:border-blue-500 shadow-inner" />
-                  <p className="text-[10px] text-gray-500 font-medium mt-1.5 leading-tight pl-1">Se permiten <span className="text-red-400">negativos</span> únicamente durante los ajustes.</p>
+                  <p className="text-xs text-gray-500 font-medium mt-1.5 leading-tight pl-1">Se permiten <span className="text-red-400">negativos</span> únicamente durante los ajustes.</p>
                 </div>
               </div>
               {(moveForm.type === 'LOSS' || moveForm.type === 'ADJUSTMENT') && (
