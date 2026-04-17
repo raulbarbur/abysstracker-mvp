@@ -55,20 +55,20 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
     <ToastContext.Provider value={{ toast }}>
       {children}
       {/* Toast Container */}
-      <div className="fixed top-0 z-[100] flex w-full flex-col gap-2 p-4 sm:p-6 md:top-4 md:right-4 md:w-auto md:max-w-[420px]">
+      <div className="pointer-events-none fixed top-0 z-100 flex w-full flex-col gap-2 p-4 sm:p-6 md:top-4 md:right-4 md:w-auto md:max-w-105">
         {toasts.map((t) => (
           <div 
             key={t.id}
             className={`pointer-events-auto flex w-full items-start gap-4 rounded-lg border p-4 shadow-lg transition-all animate-in slide-in-from-top-5 md:slide-in-from-right-5 fade-in duration-300 bg-surface ${getBgClass(t.variant)}`}
           >
-            <div className="flex-shrink-0 mt-0.5">{getIcon(t.variant)}</div>
+            <div className="shrink-0 mt-0.5">{getIcon(t.variant)}</div>
             <div className="flex-1 overflow-hidden">
               {t.title && <h3 className="font-bold text-sm tracking-wide">{t.title}</h3>}
               <p className={`text-sm opacity-90 ${t.title ? "mt-1" : ""}`}>{t.message}</p>
             </div>
             <button 
               onClick={() => removeToast(t.id)}
-              className="flex-shrink-0 rounded-md p-1 opacity-70 hover:opacity-100 hover:bg-black/5 dark:hover:bg-white/5 transition-colors focus:outline-none"
+              className="shrink-0 rounded-md p-1 opacity-70 hover:opacity-100 hover:bg-black/5 dark:hover:bg-white/5 transition-colors focus:outline-none"
             >
               <X className="h-4 w-4" />
             </button>
