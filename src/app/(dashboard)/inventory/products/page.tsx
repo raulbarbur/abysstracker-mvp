@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { useSearchParams } from "next/navigation";
-import { Plus, Search } from "lucide-react";
+import { Plus, Search, EyeOff, Eye } from "lucide-react";
 import { ProductRow } from "./ProductRow";
 import { ProductModal } from "./ProductModal";
 import { VariantModal } from "./VariantModal";
@@ -72,6 +72,7 @@ export default function ProductsPage() {
   const [expandedProductId, setExpandedProductId] = useState<string | null>(null);
   const [modal, setModal] = useState<ModalState>({ type: "none" });
   const [query, setQuery] = useState("");
+  const [showDisabled, setShowDisabled] = useState(false);
   const searchParams = useSearchParams();
 
   useEffect(() => {
@@ -95,13 +96,24 @@ export default function ProductsPage() {
   useEffect(() => { fetchProducts(); }, [fetchProducts]);
 
   const filteredProducts = useMemo(() => {
-    if (!query.trim()) return products;
-    const q = query.trim().toLowerCase();
-    return products.filter(p =>
-      p.name.toLowerCase().includes(q) ||
-      p.variants.some(v => v.name.toLowerCase().includes(q))
-    );
-  }, [products, query]);
+    let result = products;
+
+    if (!showDisabled) {
+      result = result
+        .filter(p => p.active)
+        .map(p => ({ ...p, variants: p.variants.filter(v => v.active) }));
+    }
+
+    if (query.trim()) {
+      const q = query.trim().toLowerCase();
+      result = result.filter(p =>
+        p.name.toLowerCase().includes(q) ||
+        p.variants.some(v => v.name.toLowerCase().includes(q))
+      );
+    }
+
+    return result;
+  }, [products, query, showDisabled]);
 
   const updateProductInList = (updatedProduct: ProductType) => {
     setProducts(prev => prev.map(p => p.id === updatedProduct.id ? { ...p, ...updatedProduct } : p));
@@ -140,17 +152,30 @@ export default function ProductsPage() {
         </button>
       </div>
 
-      {/* ── Barra de búsqueda ─────────────────────────────── */}
-      <div className="relative">
-        <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-text-disabled pointer-events-none" />
-        <input
-          type="search"
-          id="search-productos"
-          placeholder="Buscar producto o variante..."
-          value={query}
-          onChange={e => setQuery(e.target.value)}
-          className="w-full pl-10 pr-4 py-3 bg-surface border border-border rounded-2xl text-sm font-medium text-text-primary placeholder:text-text-disabled focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all"
-        />
+      {/* ── Barra de búsqueda + toggle deshabilitados ─────── */}
+      <div className="flex gap-3">
+        <div className="relative flex-1">
+          <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-text-disabled pointer-events-none" />
+          <input
+            type="search"
+            id="search-productos"
+            placeholder="Buscar producto o variante..."
+            value={query}
+            onChange={e => setQuery(e.target.value)}
+            className="w-full pl-10 pr-4 py-3 bg-surface border border-border rounded-2xl text-sm font-medium text-text-primary placeholder:text-text-disabled focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all"
+          />
+        </div>
+        <button
+          onClick={() => setShowDisabled(prev => !prev)}
+          className={`flex items-center gap-2 px-4 py-3 rounded-2xl border font-bold text-sm transition-all whitespace-nowrap flex-shrink-0 ${
+            showDisabled
+              ? "border-primary bg-primary/10 text-primary"
+              : "border-border bg-surface text-text-secondary hover:border-border hover:text-text-primary"
+          }`}
+        >
+          {showDisabled ? <Eye size={15} /> : <EyeOff size={15} />}
+          <span className="hidden sm:inline">{showDisabled ? "Ocultar deshabilitados" : "Mostrar deshabilitados"}</span>
+        </button>
       </div>
 
       {/* ── Lista de productos ────────────────────────────── */}

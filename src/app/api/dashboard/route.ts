@@ -38,19 +38,26 @@ export async function GET(request: NextRequest) {
         JOIN "Variant" v ON v.id = sl."variantId"
         JOIN "Product" p ON p.id = v."productId"
         WHERE s.status = 'ACTIVE' AND s.date >= ${sevenDaysAgo}
+          AND v.active = true AND p.active = true
         GROUP BY v.id, v.name, p.name
         ORDER BY "totalQuantitySold" DESC
         LIMIT 5
       `,
       // c) latestMovements
       prisma.stockMovement.findMany({
+        where: {
+          variant: {
+            active: true,
+            product: { active: true }
+          }
+        },
         orderBy: { createdAt: 'desc' },
         take: 10,
-        include: { 
+        include: {
           variant: {
             include: { product: true }
-          }, 
-          user: true 
+          },
+          user: true
         }
       }),
       // d) lowStockAlerts
@@ -59,6 +66,7 @@ export async function GET(request: NextRequest) {
         FROM "Variant" v
         JOIN "Product" p ON p.id = v."productId"
         WHERE v."minimumStock" > 0 AND v."currentStock" < v."minimumStock"
+          AND v.active = true AND p.active = true
         ORDER BY (v."currentStock" - v."minimumStock") ASC
         LIMIT 10
       `
