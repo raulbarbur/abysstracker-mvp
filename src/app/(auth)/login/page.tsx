@@ -1,14 +1,16 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect, Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import { Eye, EyeOff, Loader2, XCircle, Sun, Moon } from "lucide-react";
 import { usePreferences } from "@/components/preferences-provider";
 import { BrandName } from "@/components/ui/BrandName";
 
-export default function LoginPage() {
+function LoginForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const sessionExpired = searchParams.get("session") === "expired";
   const { theme, toggleTheme, toggleFontSize } = usePreferences();
 
   /* Redirect if already authenticated */
@@ -107,6 +109,17 @@ export default function LoginPage() {
             Gestión Centralizada
           </p>
         </div>
+
+        {/* Session expired notice */}
+        {sessionExpired && (
+          <div
+            role="alert"
+            className="flex items-start gap-2.5 rounded-xl border border-warning/30 bg-warning/10 px-4 py-3 text-sm text-warning font-semibold"
+          >
+            <span className="mt-0.5 flex-shrink-0">⚠</span>
+            <span>Tu sesión expiró. Iniciá sesión nuevamente para continuar.</span>
+          </div>
+        )}
 
         {/* Card */}
         <div className="bg-surface border border-border rounded-2xl p-8 shadow-xl flex flex-col gap-6">
@@ -219,5 +232,13 @@ export default function LoginPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense>
+      <LoginForm />
+    </Suspense>
   );
 }

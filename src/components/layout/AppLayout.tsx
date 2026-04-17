@@ -1,12 +1,34 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
 import { Sidebar } from "./Sidebar";
 import { MobileMenu } from "./MobileMenu";
 
 export function AppLayout({ children }: { children: React.ReactNode }) {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const router = useRouter();
+  const redirectingRef = useRef(false);
+
+  // Intercept all fetch calls — if any API returns 401 the session expired;
+  // redirect immediately to login with a flag so the page can show a notice.
+  useEffect(() => {
+    const originalFetch = window.fetch.bind(window);
+
+    window.fetch = async (...args) => {
+      const response = await originalFetch(...args);
+      if (response.status === 401 && !redirectingRef.current) {
+        redirectingRef.current = true;
+        router.push("/login?session=expired");
+      }
+      return response;
+    };
+
+    return () => {
+      window.fetch = originalFetch;
+    };
+  }, [router]);
 
   useEffect(() => {
     setMounted(true);

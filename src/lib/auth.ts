@@ -8,7 +8,7 @@ export async function generateJWT(payload: { userId: string; username: string })
   const secretKey = new TextEncoder().encode(secret);
   return new SignJWT(payload)
     .setProtectedHeader({ alg: 'HS256' })
-    .setExpirationTime('8h')
+    .setExpirationTime('7d')
     .sign(secretKey);
 }
 
