@@ -75,7 +75,7 @@ export function CancelModal({ saleId, isOpen, onClose, onSuccess }: CancelModalP
          )}
 
          <div className="flex bg-destructive/10 border border-destructive text-destructive p-4 md:p-5 rounded-2xl md:rounded-xl gap-3 md:gap-4 items-start mb-4 md:mb-6 shadow-sm">
-           <AlertTriangle size={24} className="md:w-7 md:h-7 mt-0.5 flex-shrink-0" />
+           <AlertTriangle size={24} className="md:w-7 md:h-7 mt-0.5 shrink-0" />
            <p className="text-sm md:text-md font-semibold leading-relaxed">
              Estás a punto de anular esta venta de manera irreversible. Esta acción restaurará obligatoriamente el stock de las variantes a la bodega central.
            </p>
@@ -93,7 +93,7 @@ export function CancelModal({ saleId, isOpen, onClose, onSuccess }: CancelModalP
              onChange={e => setReason(e.target.value)}
              disabled={status === "loading" || status === "success"}
              placeholder="Dicta el motivo exacto de la devolución / cancelación..."
-             className={`w-full min-h-[100px] md:min-h-[120px] rounded-xl border md:border-2 p-3 md:p-4 text-sm md:text-md bg-base focus:outline-none focus:ring-4 transition-all resize-none shadow-inner ${isOverLimit ? 'border-destructive focus:ring-destructive/20 focus:border-destructive' : 'border-border focus:ring-primary/20 focus:border-primary'}`}
+             className={`w-full min-h-25 md:min-h-30 rounded-xl border md:border-2 p-3 md:p-4 text-sm md:text-md bg-base focus:outline-none focus:ring-4 transition-all resize-none shadow-inner ${isOverLimit ? 'border-destructive focus:ring-destructive/20 focus:border-destructive' : 'border-border focus:ring-primary/20 focus:border-primary'}`}
            />
          </div>
 
@@ -109,7 +109,7 @@ export function CancelModal({ saleId, isOpen, onClose, onSuccess }: CancelModalP
               <button
                 onClick={handleSubmit}
                 disabled={status === "loading" || isTooShort || isOverLimit}
-                className="w-full md:w-auto md:flex-[2] py-3 md:py-2.5 px-4 font-black flex items-center justify-center gap-2 md:gap-3 rounded-xl md:rounded-lg bg-destructive hover:bg-destructive-hover active:bg-destructive shadow-sm text-white disabled:opacity-50 transition-all active:scale-[0.98] outline-none text-sm md:text-base"
+                className="w-full md:w-auto md:flex-2 py-3 md:py-2.5 px-4 font-black flex items-center justify-center gap-2 md:gap-3 rounded-xl md:rounded-lg bg-destructive hover:bg-destructive-hover active:bg-destructive shadow-sm text-white disabled:opacity-50 transition-all active:scale-[0.98] outline-none text-sm md:text-base"
               >
                 {status === "loading" ? <Loader2 className="animate-spin" size={18} /> : <AlertTriangle size={18} />}
                 {status === "loading" ? 'Procesando...' : 'Autorizar Reintegro'}

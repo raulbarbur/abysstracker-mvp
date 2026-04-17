@@ -64,7 +64,7 @@ function VariantActionMenu({
       </button>
 
       {open && (
-        <div className="absolute right-0 top-full mt-1.5 z-20 bg-surface border border-border rounded-2xl shadow-lg min-w-[190px] overflow-hidden animate-in fade-in slide-in-from-top-2 duration-150">
+        <div className="absolute right-0 top-full mt-1.5 z-20 bg-surface border border-border rounded-2xl shadow-lg min-w-47.5 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-150">
           <button
             onClick={() => { onPriceHistory(); setOpen(false); }}
             className="flex items-center gap-3 w-full px-4 py-3 text-sm font-bold text-text-secondary hover:bg-hover hover:text-text-primary transition-colors text-left"
@@ -105,14 +105,14 @@ export function ProductRow({
         {/* Expand toggle */}
         <button
           onClick={onToggleExpand}
-          className={`p-2 rounded-xl hover:bg-surface transition-all active:scale-90 flex-shrink-0 ${isExpanded ? "text-primary bg-primary/10" : "text-text-disabled"}`}
+          className={`p-2 rounded-xl hover:bg-surface transition-all active:scale-90 shrink-0 ${isExpanded ? "text-primary bg-primary/10" : "text-text-disabled"}`}
         >
           <ChevronRight size={20} className={`transition-transform duration-200 ${isExpanded ? "rotate-90" : ""}`} />
         </button>
 
         {/* Product info — clickable */}
         <div className="flex-1 flex flex-col cursor-pointer min-w-0" onClick={onToggleExpand}>
-          <span className={`font-black text-lg leading-tight break-words line-clamp-2 ${product.active ? "text-text-primary" : "text-text-disabled line-through"}`}>
+          <span className={`font-black text-lg leading-tight wrap-break-word line-clamp-2 ${product.active ? "text-text-primary" : "text-text-disabled line-through"}`}>
             {product.name}
           </span>
           <div className="flex items-center gap-3 mt-1 flex-wrap">
@@ -127,7 +127,7 @@ export function ProductRow({
         </div>
 
         {/* Product actions */}
-        <div className="flex items-center gap-2 flex-shrink-0">
+        <div className="flex items-center gap-2 shrink-0">
           <button
             onClick={(e) => { e.stopPropagation(); onEditProduct(); }}
             className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-base border border-border hover:border-primary hover:text-primary text-text-secondary transition-all active:scale-95 text-sm font-bold"
@@ -205,9 +205,9 @@ export function ProductRow({
                         </div>
 
                         {/* Right: stock badge + mínimo */}
-                        <div className="flex items-center gap-2 flex-shrink-0 flex-wrap">
+                        <div className="flex items-center gap-2 shrink-0 flex-wrap">
                           <div className={`flex items-center gap-2 px-3 py-1.5 rounded-xl border font-bold text-sm ${stockBadge}`}>
-                            <span className={`w-2 h-2 rounded-full flex-shrink-0 ${stockDot}`} />
+                            <span className={`w-2 h-2 rounded-full shrink-0 ${stockDot}`} />
                             <span>{variant.currentStock.toLocaleString('es-AR')} en stock</span>
                           </div>
                           {variant.minimumStock > 0 && (

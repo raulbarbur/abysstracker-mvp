@@ -61,7 +61,7 @@ export function MobileMenu() {
         footer={
           <div className="flex items-center justify-between w-full pb-[calc(1rem+env(safe-area-inset-bottom))]">
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-full bg-primary/20 text-primary flex items-center justify-center font-bold flex-shrink-0">
+              <div className="w-9 h-9 rounded-full bg-primary/20 text-primary flex items-center justify-center font-bold shrink-0">
                 U
               </div>
               <div className="flex flex-col">
@@ -82,7 +82,7 @@ export function MobileMenu() {
                 className="w-10 h-10 flex items-center justify-center text-text-secondary hover:text-primary rounded-lg transition-colors bg-elevated border border-border"
                 title="Tamaño de Fuente"
               >
-                <span className="font-bold text-[16px] leading-none">Aa</span>
+                <span className="font-bold text-sm leading-none">Aa</span>
               </button>
               <button 
                 onClick={handleLogout}
@@ -107,7 +107,7 @@ export function MobileMenu() {
                   onClick={() => setIsOpen(false)}
                   className="group flex items-center gap-4 px-4 py-3.5 my-1 rounded-xl bg-primary text-white hover:bg-primary-hover active:bg-primary-active font-medium shadow-sm transition-all"
                 >
-                  <item.icon size={20} className="flex-shrink-0" />
+                  <item.icon size={20} className="shrink-0" />
                   <span>{item.label}</span>
                 </Link>
               );

@@ -77,7 +77,7 @@ export function ConfirmModal({ isOpen, onClose, cartItems, subtotal, onSuccess }
 
         {status === "error" && (
           <div className="mb-5 p-5 rounded-2xl bg-destructive/10 border border-destructive/30 flex items-start gap-4 text-destructive animate-in swing-in-top-fwd duration-300 shadow-sm">
-            <AlertOctagon size={28} className="mt-0.5 flex-shrink-0" />
+            <AlertOctagon size={28} className="mt-0.5 shrink-0" />
             <div className="flex flex-col">
               <span className="font-black text-lg">Transacción Rechazada</span>
               <span className="text-md font-semibold leading-tight">{errorMessage}</span>
@@ -100,7 +100,7 @@ export function ConfirmModal({ isOpen, onClose, cartItems, subtotal, onSuccess }
                       {item.quantity} x ${item.unitPrice.toLocaleString('es-AR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
                     </span>
                   </div>
-                  <span className="font-black text-sm md:text-base text-text-primary bg-surface border border-border px-2.5 py-1 rounded-lg shadow-sm flex-shrink-0">
+                  <span className="font-black text-sm md:text-base text-text-primary bg-surface border border-border px-2.5 py-1 rounded-lg shadow-sm shrink-0">
                     ${(item.quantity * item.unitPrice).toLocaleString('es-AR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
                   </span>
                 </div>

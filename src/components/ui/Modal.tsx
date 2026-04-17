@@ -60,7 +60,7 @@ export function Modal({ isOpen, onClose, title, children, footer, maxWidth = "md
 
   return createPortal(
     <div
-      className={`fixed inset-0 z-[9999] flex justify-center ${isMobile ? "items-end" : "items-center"} ${isMobile ? "" : "p-6"}`}
+      className={`fixed inset-0 z-9999 flex justify-center ${isMobile ? "items-end" : "items-center"} ${isMobile ? "" : "p-6"}`}
     >
       {/* Backdrop */}
       <div
@@ -89,7 +89,7 @@ export function Modal({ isOpen, onClose, title, children, footer, maxWidth = "md
       >
         {/* Header */}
         {title && (
-          <div className="flex items-center justify-between px-6 py-4 border-b border-border flex-shrink-0">
+          <div className="flex items-center justify-between px-6 py-4 border-b border-border shrink-0">
             <h2 className="font-bold text-text-primary text-lg">{title}</h2>
             <button
               onClick={onClose}
@@ -116,7 +116,7 @@ export function Modal({ isOpen, onClose, title, children, footer, maxWidth = "md
 
         {/* Footer */}
         {footer && (
-          <div className="px-6 py-4 border-t border-border flex-shrink-0">
+          <div className="px-6 py-4 border-t border-border shrink-0">
             {footer}
           </div>
         )}

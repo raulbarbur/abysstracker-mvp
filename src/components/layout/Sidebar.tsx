@@ -47,9 +47,9 @@ export function Sidebar({ isCollapsed, toggleCollapse, mounted }: SidebarProps) 
 
   return (
     <aside 
-      className={`hidden md:flex flex-col fixed top-0 left-0 h-full bg-surface border-r border-border transition-all duration-200 ease-in-out z-40 ${isCollapsed ? 'w-[60px]' : 'w-[280px]'}`}
+      className={`hidden md:flex flex-col fixed top-0 left-0 h-full bg-surface border-r border-border transition-all duration-200 ease-in-out z-40 ${isCollapsed ? 'w-15' : 'w-70'}`}
     >
-      <div className="h-16 flex items-center justify-between px-4 border-b border-border flex-shrink-0 gap-2">
+      <div className="h-16 flex items-center justify-between px-4 border-b border-border shrink-0 gap-2">
         {/* Brand — expanded */}
         {!isCollapsed && <BrandName size="text-lg" />}
 
@@ -61,7 +61,7 @@ export function Sidebar({ isCollapsed, toggleCollapse, mounted }: SidebarProps) 
         {!isCollapsed && (
           <button
             onClick={toggleCollapse}
-            className="text-text-disabled hover:text-primary transition-colors p-1 flex-shrink-0"
+            className="text-text-disabled hover:text-primary transition-colors p-1 shrink-0"
             title="Colapsar"
           >
             <PanelLeftClose size={18} />
@@ -89,8 +89,8 @@ export function Sidebar({ isCollapsed, toggleCollapse, mounted }: SidebarProps) 
                 } bg-primary hover:bg-primary-hover text-white shadow-sm hover:shadow relative`}
                 title={isCollapsed ? item.label : undefined}
               >
-                <item.icon size={20} className="flex-shrink-0" />
-                {!isCollapsed && <span className="ml-3 font-medium text-sm break-words line-clamp-2">{item.label}</span>}
+                <item.icon size={20} className="shrink-0" />
+                {!isCollapsed && <span className="ml-3 font-medium text-sm wrap-break-word line-clamp-2">{item.label}</span>}
               </Link>
             );
           }
@@ -103,13 +103,13 @@ export function Sidebar({ isCollapsed, toggleCollapse, mounted }: SidebarProps) 
                 isCollapsed ? 'justify-center p-2' : 'px-3 py-2.5'
               } ${
                 isActive 
-                  ? 'bg-elevated text-primary before:content-[""] before:absolute before:left-0 before:top-0 before:h-full before:w-[3px] before:bg-primary' 
+                  ? 'bg-elevated text-primary before:content-[""] before:absolute before:left-0 before:top-0 before:h-full before:w-0.75 before:bg-primary' 
                   : 'text-text-secondary hover:bg-hover hover:text-primary'
               }`}
               title={isCollapsed ? item.label : undefined}
             >
-              <item.icon size={20} className={`flex-shrink-0 ${isActive ? 'text-primary' : ''}`} />
-              {!isCollapsed && <span className="ml-3 font-medium text-sm break-words line-clamp-2">{item.label}</span>}
+              <item.icon size={20} className={`shrink-0 ${isActive ? 'text-primary' : ''}`} />
+              {!isCollapsed && <span className="ml-3 font-medium text-sm wrap-break-word line-clamp-2">{item.label}</span>}
             </Link>
           );
         })}
@@ -118,25 +118,25 @@ export function Sidebar({ isCollapsed, toggleCollapse, mounted }: SidebarProps) 
       <div className="border-t border-border p-2">
         <div className={`flex flex-col gap-3 ${isCollapsed ? 'px-1 py-3' : 'px-2 py-3'} rounded-md bg-elevated`}>
           <div className={`flex items-center ${isCollapsed ? 'justify-center' : ''}`}>
-            <div className="w-8 h-8 rounded-full bg-primary/20 text-primary flex items-center justify-center font-bold flex-shrink-0">
+            <div className="w-8 h-8 rounded-full bg-primary/20 text-primary flex items-center justify-center font-bold shrink-0">
               U
             </div>
             {!isCollapsed && (
               <div className="ml-3 flex flex-col min-w-0">
-                <span className="text-sm font-semibold leading-tight break-words line-clamp-2">Usuario</span>
-                <span className="text-xs text-text-secondary break-words line-clamp-1">Admin</span>
+                <span className="text-sm font-semibold leading-tight wrap-break-word line-clamp-2">Usuario</span>
+                <span className="text-xs text-text-secondary wrap-break-word line-clamp-1">Admin</span>
               </div>
             )}
           </div>
           
           <div className={`flex items-center border-t border-border pt-3 ${isCollapsed ? 'flex-col gap-2' : 'justify-around'}`}>
-            <button onClick={toggleTheme} className="w-[28px] h-[28px] flex items-center justify-center text-text-secondary hover:text-primary rounded-md hover:bg-hover transition-colors" title="Cambiar Tema">
+            <button onClick={toggleTheme} className="w-7 h-7 flex items-center justify-center text-text-secondary hover:text-primary rounded-md hover:bg-hover transition-colors" title="Cambiar Tema">
               {mounted && theme === 'dark' ? <Sun size={17} /> : <Moon size={17} />}
             </button>
-            <button onClick={toggleFontSize} className="w-[28px] h-[28px] flex items-center justify-center text-text-secondary hover:text-primary rounded-md hover:bg-hover transition-colors" title="Tamaño de Fuente">
-              <span className="font-bold text-[15px] leading-none block">Aa</span>
+            <button onClick={toggleFontSize} className="w-7 h-7 flex items-center justify-center text-text-secondary hover:text-primary rounded-md hover:bg-hover transition-colors" title="Tamaño de Fuente">
+              <span className="font-bold text-sm leading-none block">Aa</span>
             </button>
-            <button onClick={handleLogout} disabled={isLoggingOut} className="w-[28px] h-[28px] flex items-center justify-center text-destructive hover:text-destructive-hover rounded-md hover:bg-destructive/10 transition-colors disabled:opacity-50" title="Cerrar Sesión">
+            <button onClick={handleLogout} disabled={isLoggingOut} className="w-7 h-7 flex items-center justify-center text-destructive hover:text-destructive-hover rounded-md hover:bg-destructive/10 transition-colors disabled:opacity-50" title="Cerrar Sesión">
               <LogOut size={16} />
             </button>
           </div>

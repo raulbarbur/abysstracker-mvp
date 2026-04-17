@@ -26,7 +26,7 @@ export function BottomNav() {
       <div className="flex-1 flex justify-center h-full relative">
         <Link 
           href="/sales/new" 
-          className="absolute -top-6 flex items-center justify-center w-[52px] h-[52px] bg-primary text-white rounded-full shadow-lg hover:bg-primary-hover transition-transform active:scale-95"
+          className="absolute -top-6 flex items-center justify-center w-13 h-13 bg-primary text-white rounded-full shadow-lg hover:bg-primary-hover transition-transform active:scale-95"
         >
           <ShoppingCart size={24} />
         </Link>

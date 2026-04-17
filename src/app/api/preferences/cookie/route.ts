@@ -4,7 +4,7 @@ export const dynamic = 'force-dynamic';
 
 const cookieOpts = {
   path: "/",
-  httpOnly: true,
+  httpOnly: false, // non-sensitive preference data; must be false so client can also write via document.cookie
   sameSite: "strict" as const,
   maxAge: 60 * 60 * 24 * 30, // 30 days
 };

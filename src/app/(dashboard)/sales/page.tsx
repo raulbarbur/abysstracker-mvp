@@ -113,7 +113,7 @@ export default function SalesHistoryPage() {
   const selectedSaleObj = filteredSales.find(s => s.id === expandedSaleId);
 
   return (
-    <div className="flex flex-col h-full gap-5 mx-auto max-w-[1400px]">
+    <div className="flex flex-col h-full gap-5 mx-auto max-w-350">
       <div>
         <h1 className="text-3xl font-black text-text-primary tracking-tight mb-2">Historial de Ventas</h1>
         <p className="text-text-secondary text-md font-semibold">Resumen analítico y lista maestra de transacciones.</p>
@@ -165,8 +165,8 @@ export default function SalesHistoryPage() {
         onClearFilters={handleClearFilters}
       />
 
-      <div className="flex-1 flex flex-col lg:flex-row gap-5 min-h-[0px]">
-        <div className="flex-1 lg:w-[50%] xl:w-[45%] bg-surface border border-border rounded-2xl overflow-hidden shadow-sm flex flex-col relative h-[500px] lg:h-full">
+      <div className="flex-1 flex flex-col lg:flex-row gap-5 min-h-0">
+        <div className="flex-1 lg:w-[50%] xl:w-[45%] bg-surface border border-border rounded-2xl overflow-hidden shadow-sm flex flex-col relative h-125 lg:h-full">
           {loading ? (
             <div className="flex-1 flex flex-col justify-center items-center py-20 text-text-secondary w-full">
                <Loader2 className="animate-spin w-12 h-12 mb-4" />
@@ -193,7 +193,7 @@ export default function SalesHistoryPage() {
 
         {selectedSaleObj ? (
           <div className="hidden lg:flex flex-col w-[50%] xl:w-[55%] bg-surface border border-border rounded-2xl shadow-sm overflow-hidden h-full">
-            <div className="px-6 py-5 border-b border-border bg-base flex flex-col justify-center h-[5rem] flex-shrink-0">
+            <div className="px-6 py-5 border-b border-border bg-base flex flex-col justify-center h-20 shrink-0">
               <span className="font-black text-xl text-text-primary leading-none">Detalle de Operación</span>
               {selectedSaleObj.invoice?.invoiceNumber && (
                 <span className="text-sm font-semibold text-text-secondary mt-1">Ticket #{selectedSaleObj.invoice.invoiceNumber}</span>

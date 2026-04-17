@@ -138,7 +138,7 @@ export function ProductModal({ product, isOpen, onClose, onSuccess }: ProductMod
                     {variants.length > 1 && (
                       <button
                         onClick={() => setVariants(variants.filter((_, i) => i !== index))}
-                        className="p-2 mb-[1px] text-destructive hover:bg-destructive/10 rounded-lg transition-colors flex-shrink-0"
+                        className="p-2 mb-px text-destructive hover:bg-destructive/10 rounded-lg transition-colors shrink-0"
                       >
                         <Trash2 size={18} />
                       </button>

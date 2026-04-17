@@ -101,7 +101,7 @@ export default function StockPage() {
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
         
         {/* STOCK ACTUAL PANEL */}
-        <div className="bg-gray-900/60 border border-gray-800/80 rounded-2xl overflow-hidden backdrop-blur-md shadow-2xl flex flex-col max-h-[800px]">
+        <div className="bg-gray-900/60 border border-gray-800/80 rounded-2xl overflow-hidden backdrop-blur-md shadow-2xl flex flex-col max-h-200">
           <div className="p-6 border-b border-gray-800/80 flex items-center justify-between bg-black/40">
             <h3 className="font-bold text-gray-100 text-lg tracking-wide">Stock Actual</h3>
             <span className="text-xs bg-gray-800 text-gray-400 px-3 py-1 rounded-full">{stock.length} variantes</span>
@@ -143,7 +143,7 @@ export default function StockPage() {
         </div>
 
         {/* HISTORIAL PANEL */}
-        <div className="bg-gray-900/60 border border-gray-800/80 rounded-2xl overflow-hidden backdrop-blur-md shadow-2xl flex flex-col max-h-[800px]">
+        <div className="bg-gray-900/60 border border-gray-800/80 rounded-2xl overflow-hidden backdrop-blur-md shadow-2xl flex flex-col max-h-200">
           <div className="p-6 border-b border-gray-800/80 flex items-center justify-between bg-black/40">
             <h3 className="font-bold text-gray-100 text-lg tracking-wide">Historial Transaccional</h3>
             <button onClick={handleDownloadMovements} className="text-xs font-bold text-blue-400 hover:text-white px-4 py-2 hover:bg-blue-600/30 bg-blue-600/10 border border-blue-500/20 rounded-lg transition-all shadow-inner flex items-center gap-1">

@@ -72,7 +72,7 @@ function LoginForm() {
       />
 
       {/* Quick accessibility toggles */}
-      <div className="absolute top-4 right-4 flex items-center gap-2 z-[100]">
+      <div className="absolute top-4 right-4 flex items-center gap-2 z-100">
         <button 
           type="button"
           onClick={toggleTheme}
@@ -91,7 +91,7 @@ function LoginForm() {
         </button>
       </div>
 
-      <div className="relative z-10 w-full max-w-[420px] flex flex-col gap-8">
+      <div className="relative z-10 w-full max-w-105 flex flex-col gap-8">
         {/* Brand */}
         <div className="flex flex-col items-center gap-2 select-none">
           <Image
@@ -116,7 +116,7 @@ function LoginForm() {
             role="alert"
             className="flex items-start gap-2.5 rounded-xl border border-warning/30 bg-warning/10 px-4 py-3 text-sm text-warning font-semibold"
           >
-            <span className="mt-0.5 flex-shrink-0">⚠</span>
+            <span className="mt-0.5 shrink-0">⚠</span>
             <span>Tu sesión expiró. Iniciá sesión nuevamente para continuar.</span>
           </div>
         )}
@@ -154,7 +154,7 @@ function LoginForm() {
                 required
                 placeholder="Ej: admin"
                 className="
-                  w-full min-h-[44px] rounded-lg border border-border bg-elevated
+                  w-full min-h-11 rounded-lg border border-border bg-elevated
                   px-3 py-2 text-sm text-text-primary placeholder:text-text-disabled
                   focus-visible:outline-none focus-visible:ring-2
                   focus-visible:ring-primary/30 focus-visible:border-primary
@@ -181,7 +181,7 @@ function LoginForm() {
                   required
                   placeholder="••••••••"
                   className="
-                    w-full min-h-[44px] rounded-lg border border-border bg-elevated
+                    w-full min-h-11 rounded-lg border border-border bg-elevated
                     px-3 pr-11 py-2 text-sm text-text-primary placeholder:text-text-disabled
                     focus-visible:outline-none focus-visible:ring-2
                     focus-visible:ring-primary/30 focus-visible:border-primary
@@ -207,7 +207,7 @@ function LoginForm() {
                 role="alert"
                 className="flex items-start gap-2.5 rounded-lg border border-destructive/20 bg-destructive/10 px-4 py-3 text-sm text-destructive font-medium"
               >
-                <XCircle size={16} className="flex-shrink-0 mt-0.5" />
+                <XCircle size={16} className="shrink-0 mt-0.5" />
                 {error}
               </div>
             )}
@@ -218,14 +218,14 @@ function LoginForm() {
               type="submit"
               disabled={isLoading}
               className="
-                w-full min-h-[46px] rounded-lg bg-primary hover:bg-primary-hover
+                w-full min-h-11.5 rounded-lg bg-primary hover:bg-primary-hover
                 active:bg-primary-active text-white font-semibold text-sm
                 flex items-center justify-center gap-2 mt-1
                 transition-colors shadow-sm shadow-primary/20
                 disabled:pointer-events-none disabled:opacity-60
               "
             >
-              {isLoading && <Loader2 size={16} className="animate-spin flex-shrink-0" />}
+              {isLoading && <Loader2 size={16} className="animate-spin shrink-0" />}
               {isLoading ? "Validando…" : "Iniciar sesión"}
             </button>
           </form>

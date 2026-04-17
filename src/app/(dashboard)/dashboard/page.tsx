@@ -81,7 +81,7 @@ export default function DashboardIndexPage() {
 
   if (error) {
     return (
-      <div className="max-w-[1200px] mx-auto w-full mt-4">
+      <div className="max-w-300 mx-auto w-full mt-4">
         <Banner 
           variant="error" 
           title="Falló la conexión" 
@@ -105,7 +105,7 @@ export default function DashboardIndexPage() {
   const greeting = currentHour < 12 ? "Buenos días" : currentHour < 19 ? "Buenas tardes" : "Buenas noches";
 
   return (
-    <div className="max-w-[1200px] mx-auto w-full flex flex-col gap-6 md:gap-8 pb-10">
+    <div className="max-w-300 mx-auto w-full flex flex-col gap-6 md:gap-8 pb-10">
       
       {/* HEADER BIENVENIDA */}
       <div className="flex flex-col gap-1.5 pt-2">
@@ -117,12 +117,12 @@ export default function DashboardIndexPage() {
       <div className="flex overflow-x-auto snap-x snap-mandatory md:grid md:grid-cols-3 gap-4 md:gap-6 pb-2 -mx-4 px-4 md:mx-0 md:px-0 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
         
         {/* CARD: VENTAS HOY */}
-        <div className="relative min-w-[85vw] sm:min-w-[300px] md:min-w-0 snap-center shrink-0 bg-surface border border-border rounded-2xl p-6 md:p-7 shadow-sm flex flex-col gap-4 overflow-hidden group hover:border-primary/30 transition-all duration-300">
-           <div className="absolute -top-10 -right-10 w-32 h-32 bg-primary/5 blur-[40px] rounded-full group-hover:bg-primary/20 transition-all duration-500"></div>
+        <div className="relative min-w-[85vw] sm:min-w-75 md:min-w-0 snap-center shrink-0 bg-surface border border-border rounded-2xl p-6 md:p-7 shadow-sm flex flex-col gap-4 overflow-hidden group hover:border-primary/30 transition-all duration-300">
+           <div className="absolute -top-10 -right-10 w-32 h-32 bg-primary/5 blur-2xl rounded-full group-hover:bg-primary/20 transition-all duration-500"></div>
            <Sparkline type="primary" />
            <div className="relative flex items-center gap-3">
              <div className="p-2.5 rounded-xl bg-primary/10 text-primary">
-               <TrendingUp className="w-5 h-5 flex-shrink-0" />
+               <TrendingUp className="w-5 h-5 shrink-0" />
              </div>
              <span className="text-sm font-black text-text-secondary uppercase tracking-[0.15em]">Ventas Hoy</span>
            </div>
@@ -145,12 +145,12 @@ export default function DashboardIndexPage() {
         </div>
 
         {/* CARD: INGRESOS DEL MES */}
-        <div className="relative min-w-[85vw] sm:min-w-[300px] md:min-w-0 snap-center shrink-0 bg-surface border border-border rounded-2xl p-6 md:p-7 shadow-sm flex flex-col gap-4 overflow-hidden group hover:border-success/30 transition-all duration-300">
-           <div className="absolute -top-10 -right-10 w-32 h-32 bg-success/5 blur-[40px] rounded-full group-hover:bg-success/20 transition-all duration-500"></div>
+        <div className="relative min-w-[85vw] sm:min-w-75 md:min-w-0 snap-center shrink-0 bg-surface border border-border rounded-2xl p-6 md:p-7 shadow-sm flex flex-col gap-4 overflow-hidden group hover:border-success/30 transition-all duration-300">
+           <div className="absolute -top-10 -right-10 w-32 h-32 bg-success/5 blur-2xl rounded-full group-hover:bg-success/20 transition-all duration-500"></div>
            <Sparkline type="success" />
            <div className="relative flex items-center gap-3">
              <div className="p-2.5 rounded-xl bg-success/10 text-success">
-               <TrendingUp className="w-5 h-5 flex-shrink-0" />
+               <TrendingUp className="w-5 h-5 shrink-0" />
              </div>
              <span className="text-sm font-black text-text-secondary uppercase tracking-[0.15em]">Ingresos Mensuales</span>
            </div>
@@ -173,12 +173,12 @@ export default function DashboardIndexPage() {
         </div>
 
         {/* CARD: GANANCIAS DEL MES */}
-        <div className="relative min-w-[85vw] sm:min-w-[300px] md:min-w-0 snap-center shrink-0 bg-surface border border-border rounded-2xl p-6 md:p-7 shadow-sm flex flex-col gap-4 overflow-hidden group hover:border-info/30 transition-all duration-300">
-           <div className="absolute -top-10 -right-10 w-32 h-32 bg-info/5 blur-[40px] rounded-full group-hover:bg-info/20 transition-all duration-500"></div>
+        <div className="relative min-w-[85vw] sm:min-w-75 md:min-w-0 snap-center shrink-0 bg-surface border border-border rounded-2xl p-6 md:p-7 shadow-sm flex flex-col gap-4 overflow-hidden group hover:border-info/30 transition-all duration-300">
+           <div className="absolute -top-10 -right-10 w-32 h-32 bg-info/5 blur-2xl rounded-full group-hover:bg-info/20 transition-all duration-500"></div>
            <Sparkline type="info" />
            <div className="relative flex items-center gap-3">
              <div className="p-2.5 rounded-xl bg-info/10 text-info">
-               <TrendingUp className="w-5 h-5 flex-shrink-0" />
+               <TrendingUp className="w-5 h-5 shrink-0" />
              </div>
              <span className="text-sm font-black text-text-secondary uppercase tracking-[0.15em]">Ganancia Neta</span>
            </div>
@@ -211,10 +211,10 @@ export default function DashboardIndexPage() {
             <div className="flex flex-col gap-4">
               {[...Array(5)].map((_, i) => (
                 <div key={i} className="flex items-center justify-between">
-                  <div className="flex flex-col gap-1.5 w-full max-w-[140px]">
+                  <div className="flex flex-col gap-1.5 w-full max-w-35">
                     <Skeleton className="h-4 w-full" />
                   </div>
-                  <Skeleton className="h-6 w-12 rounded-md flex-shrink-0" />
+                  <Skeleton className="h-6 w-12 rounded-md shrink-0" />
                 </div>
               ))}
             </div>
@@ -226,10 +226,10 @@ export default function DashboardIndexPage() {
                     <span className="text-text-disabled font-bold text-sm w-3 text-center group-hover:text-primary transition-colors">{i + 1}</span>
                     <div className="flex flex-col">
                       <span className="text-sm font-bold text-text-primary leading-tight">{v.productName}</span>
-                      <span className="text-xs text-text-secondary font-semibold uppercase tracking-wide truncate max-w-[150px]">{v.variantName}</span>
+                      <span className="text-xs text-text-secondary font-semibold uppercase tracking-wide truncate max-w-37.5">{v.variantName}</span>
                     </div>
                   </div>
-                  <span className="font-bold text-primary text-sm flex-shrink-0 bg-primary/10 px-2 py-0.5 rounded-md">{v.totalQuantitySold}</span>
+                  <span className="font-bold text-primary text-sm shrink-0 bg-primary/10 px-2 py-0.5 rounded-md">{v.totalQuantitySold}</span>
                 </div>
               ))}
             </div>
@@ -245,7 +245,7 @@ export default function DashboardIndexPage() {
           <div className="bg-elevated border border-border border-l-4 border-l-destructive rounded-xl p-6 shadow-sm flex flex-col">
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-2.5">
-                <AlertTriangle className="text-destructive w-5 h-5 flex-shrink-0" />
+                <AlertTriangle className="text-destructive w-5 h-5 shrink-0" />
                 <h3 className="text-sm font-bold text-destructive uppercase tracking-wider">Stock bajo</h3>
               </div>
               <Badge variant="destructive" className="px-2">{lowStockAlerts.length}</Badge>
@@ -263,7 +263,7 @@ export default function DashboardIndexPage() {
                       </div>
                       <span className="text-xs text-text-secondary truncate mt-0.5">{alert.productName}</span>
                     </div>
-                    <div className="flex items-center gap-2 flex-shrink-0">
+                    <div className="flex items-center gap-2 shrink-0">
                       <div className="flex items-baseline gap-0.5 bg-surface px-2 py-1 rounded-md border border-border/50">
                         <span className={`text-sm font-bold ${isZero ? 'text-destructive' : 'text-warning'}`}>{alert.currentStock}</span>
                         <span className="text-xs text-text-secondary font-medium">/{alert.minimumStock}</span>
@@ -286,7 +286,7 @@ export default function DashboardIndexPage() {
             <div className="flex flex-col gap-5">
               {[...Array(3)].map((_, i) => (
                 <div key={i} className="flex justify-between items-center">
-                  <div className="flex flex-col gap-1.5 w-full max-w-[150px]">
+                  <div className="flex flex-col gap-1.5 w-full max-w-37.5">
                     <Skeleton className="h-4 w-full" />
                     <Skeleton className="h-3 w-3/4" />
                   </div>
@@ -305,8 +305,8 @@ export default function DashboardIndexPage() {
               {[...Array(5)].map((_, i) => (
                 <div key={i} className="flex justify-between items-center">
                   <div className="flex items-center gap-4 w-full">
-                    <Skeleton className="h-6 w-10 rounded-sm flex-shrink-0" />
-                    <div className="flex flex-col gap-1.5 w-full max-w-[140px]">
+                    <Skeleton className="h-6 w-10 rounded-sm shrink-0" />
+                    <div className="flex flex-col gap-1.5 w-full max-w-35">
                       <Skeleton className="h-4 w-full" />
                       <Skeleton className="h-3 w-1/2" />
                     </div>
@@ -348,19 +348,19 @@ export default function DashboardIndexPage() {
                 return (
                   <div key={m.id} className="flex items-center justify-between border-b border-border/50 pb-3 last:border-0 last:pb-0 group">
                     <div className="flex items-center gap-3">
-                      <span className={`inline-flex items-center px-2 py-1 rounded-lg border text-xs uppercase font-black tracking-widest flex-shrink-0 ${badgeClass}`}>
+                      <span className={`inline-flex items-center px-2 py-1 rounded-lg border text-xs uppercase font-black tracking-widest shrink-0 ${badgeClass}`}>
                         {typeLabel}
                       </span>
                       <div className="flex flex-col min-w-0">
                         <span className="text-sm font-bold text-text-primary leading-tight group-hover:text-primary transition-colors truncate">{m.productName}</span>
                         <div className="flex items-center gap-1.5 mt-0.5">
-                          <span className={`text-xs text-text-secondary font-semibold uppercase tracking-wide truncate max-w-[100px]`}>{m.variantName}</span>
+                          <span className={`text-xs text-text-secondary font-semibold uppercase tracking-wide truncate max-w-25`}>{m.variantName}</span>
                           <span className={`text-xs font-black tabular-nums ${qtyClass}`}>{sign}{m.quantity}</span>
                           <span className="text-xs text-text-secondary truncate"><span className="text-text-disabled mx-0.5">•</span> por <span className="font-medium text-text-primary/70">{m.username}</span></span>
                         </div>
                       </div>
                     </div>
-                    <span className="hidden sm:inline-flex text-xs font-medium text-text-secondary flex-shrink-0 bg-base border border-border/50 px-2 py-1 rounded-md ml-2">{getRelativeTime(m.createdAt)}</span>
+                    <span className="hidden sm:inline-flex text-xs font-medium text-text-secondary shrink-0 bg-base border border-border/50 px-2 py-1 rounded-md ml-2">{getRelativeTime(m.createdAt)}</span>
                   </div>
                 );
               })}

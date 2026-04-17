@@ -28,12 +28,15 @@ export function PreferencesProvider({
   const [fontSize, setFontSizeState] = useState<FontSizePreference>(initialFontSize);
 
 
+  const prefCookieMaxAge = 60 * 60 * 24 * 30; // 30 days
+
   const setTheme = (t: ThemePreference) => {
     setThemeState(t);
     const root = document.documentElement;
     root.setAttribute("data-theme", t);
     root.className = t === 'dark' ? 'dark' : 'light';
-    // Persist cookie even when unauthenticated (login page)
+    // Write cookie directly (instant, no fetch delay) so reload always picks up the latest value.
+    document.cookie = `pref_theme=${t}; path=/; max-age=${prefCookieMaxAge}; samesite=strict`;
     fetch('/api/preferences/cookie', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -44,7 +47,8 @@ export function PreferencesProvider({
   const setFontSize = (fs: FontSizePreference) => {
     setFontSizeState(fs);
     document.documentElement.setAttribute("data-font-size", fs);
-    // Persist cookie even when unauthenticated (login page)
+    // Write cookie directly (instant, no fetch delay) so reload always picks up the latest value.
+    document.cookie = `pref_font_size=${fs}; path=/; max-age=${prefCookieMaxAge}; samesite=strict`;
     fetch('/api/preferences/cookie', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },

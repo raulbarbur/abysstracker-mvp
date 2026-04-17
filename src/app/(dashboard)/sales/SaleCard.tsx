@@ -23,7 +23,7 @@ export function SaleDetailPanel({ sale, onCancelClick }: SaleDetailPanelProps) {
 
   return (
     <div className="flex flex-col h-full overflow-hidden">
-      <div className="flex-1 overflow-y-auto custom-scrollbar px-1 min-h-[0px] pb-4">
+      <div className="flex-1 overflow-y-auto custom-scrollbar px-1 min-h-0 pb-4">
         {sale.lines.map((line, idx) => (
           <div key={idx} className="flex justify-between items-center py-4 border-b border-border hover:bg-hover px-3 rounded-xl transition-colors">
             <div className="flex flex-col pr-4">
@@ -39,7 +39,7 @@ export function SaleDetailPanel({ sale, onCancelClick }: SaleDetailPanelProps) {
         ))}
       </div>
 
-      <div className="mt-4 pt-4 flex justify-between items-center bg-elevated px-6 py-5 rounded-2xl border border-border shadow-inner flex-shrink-0">
+      <div className="mt-4 pt-4 flex justify-between items-center bg-elevated px-6 py-5 rounded-2xl border border-border shadow-inner shrink-0">
         <div className="flex flex-col gap-1">
           <span className="text-xl font-bold text-text-secondary uppercase tracking-widest leading-none">Total</span>
           {sale.paymentMethod && (
@@ -53,7 +53,7 @@ export function SaleDetailPanel({ sale, onCancelClick }: SaleDetailPanelProps) {
       </div>
 
       {isActive ? (
-        <div className="mt-6 flex-shrink-0 space-y-3">
+        <div className="mt-6 shrink-0 space-y-3">
            {sale.invoice && (
              <button 
                onClick={() => setPdfPreview({ url: `/api/sales/${sale.id}/ticket`, title: `Ticket de Compra - ${sale.invoice?.invoiceNumber}` })}
@@ -72,7 +72,7 @@ export function SaleDetailPanel({ sale, onCancelClick }: SaleDetailPanelProps) {
            </button>
         </div>
       ) : (
-        <div className="mt-6 p-6 rounded-2xl bg-destructive/10 border border-destructive/30 text-destructive flex-shrink-0 shadow-sm">
+        <div className="mt-6 p-6 rounded-2xl bg-destructive/10 border border-destructive/30 text-destructive shrink-0 shadow-sm">
            <h4 className="font-black text-xl mb-3 flex items-center gap-3"><AlertOctagon size={24}/> Operación Anulada</h4>
            <div className="flex flex-col gap-2 border-t border-destructive/20 pt-4">
              <p className="text-md font-semibold">Desautorizado por: <span className="text-text-primary">{sale.cancelledByUser?.username || "Sistema"}</span></p>
@@ -146,7 +146,7 @@ export function SaleCard({ sale, isExpanded, onToggleExpand, onCancelClick }: Sa
         
         <div className="flex justify-between items-center p-3 pl-5 md:p-4 md:pl-6 gap-2">
           <div className="flex gap-2 md:gap-4 items-center min-w-0 flex-1">
-            <div className={`p-2 rounded-full hidden md:flex text-text-secondary transition-transform flex-shrink-0 ${isExpanded && !isMobile ? 'translate-x-1 text-primary' : ''}`}>
+            <div className={`p-2 rounded-full hidden md:flex text-text-secondary transition-transform shrink-0 ${isExpanded && !isMobile ? 'translate-x-1 text-primary' : ''}`}>
               <ChevronRight size={24} />
             </div>
              <div className="flex flex-col min-w-0 flex-1">
@@ -155,26 +155,26 @@ export function SaleCard({ sale, isExpanded, onToggleExpand, onCancelClick }: Sa
                     <span className="font-black text-md sm:text-lg md:text-xl text-text-primary tracking-tighter capitalize leading-none">{formattedDateStr}</span>
                     <span className="font-bold text-xs sm:text-sm text-text-secondary leading-none">{formattedTimeStr}</span>
                   </div>
-                  <span className={`text-xs font-bold px-2 py-0.5 rounded-md uppercase tracking-wider flex-shrink-0 whitespace-nowrap w-max ${isActive ? 'bg-success/15 text-success' : 'bg-destructive/15 text-destructive'}`}>
+                  <span className={`text-xs font-bold px-2 py-0.5 rounded-md uppercase tracking-wider shrink-0 whitespace-nowrap w-max ${isActive ? 'bg-success/15 text-success' : 'bg-destructive/15 text-destructive'}`}>
                     {isActive ? "ACTIVA" : "ANULADA"}
                   </span>
                 </div>
                 <div className="flex flex-wrap items-center gap-1.5 text-xs md:text-sm font-semibold text-text-secondary mt-0.5">
-                  <div className="flex items-center gap-1 bg-primary/5 text-primary border border-primary/20 px-1.5 py-0.5 rounded shadow-sm flex-shrink-0 whitespace-nowrap">
+                  <div className="flex items-center gap-1 bg-primary/5 text-primary border border-primary/20 px-1.5 py-0.5 rounded shadow-sm shrink-0 whitespace-nowrap">
                     <ShoppingBag size={12} className="md:w-3.5 md:h-3.5" />
                     <span className="leading-none">{totalItems} art.</span>
                   </div>
-                  {sale.invoice?.invoiceNumber ? <span className="font-mono bg-border/40 border border-border/60 px-1.5 py-0.5 rounded text-xs text-text-primary shadow-sm leading-none flex-shrink-0 whitespace-nowrap">#{sale.invoice.invoiceNumber}</span> : null}
-                  <span className="break-words line-clamp-2 max-w-[80px] sm:max-w-[150px] flex-shrink-0">{sale.user.username}</span>
+                  {sale.invoice?.invoiceNumber ? <span className="font-mono bg-border/40 border border-border/60 px-1.5 py-0.5 rounded text-xs text-text-primary shadow-sm leading-none shrink-0 whitespace-nowrap">#{sale.invoice.invoiceNumber}</span> : null}
+                  <span className="wrap-break-word line-clamp-2 max-w-20 sm:max-w-37.5 shrink-0">{sale.user.username}</span>
                 </div>
              </div>
           </div>
           
-          <div className="flex items-center gap-2 md:gap-4 flex-shrink-0 pl-1">
+          <div className="flex items-center gap-2 md:gap-4 shrink-0 pl-1">
              <span className={`font-black tracking-tighter whitespace-nowrap ${isActive ? 'text-text-primary' : 'text-text-secondary line-through opacity-50'} text-lg sm:text-xl md:text-2xl lg:text-3xl`}>
                ${totalAmount.toLocaleString('es-AR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
              </span>
-             <div className="lg:hidden text-text-secondary flex-shrink-0">
+             <div className="lg:hidden text-text-secondary shrink-0">
                <ChevronRight size={20} className="md:w-6 md:h-6" />
              </div>
           </div>
@@ -186,7 +186,7 @@ export function SaleCard({ sale, isExpanded, onToggleExpand, onCancelClick }: Sa
           <div className="absolute inset-0 bg-black/60 backdrop-blur-sm animate-in fade-in transition-opacity" onClick={onToggleExpand} />
           <div className="relative w-full bg-surface border-t border-border rounded-t-3xl shadow-2xl flex flex-col h-[85vh] animate-in slide-in-from-bottom-full duration-300">
             
-            <div className="flex justify-between items-center p-6 border-b border-border bg-base rounded-t-3xl flex-shrink-0">
+            <div className="flex justify-between items-center p-6 border-b border-border bg-base rounded-t-3xl shrink-0">
               <div className="flex flex-col">
                 <div className="flex items-baseline gap-2">
                   <span className="font-black text-xl text-text-primary tracking-tighter capitalize leading-none">{formattedDateStr}</span>
@@ -204,7 +204,7 @@ export function SaleCard({ sale, isExpanded, onToggleExpand, onCancelClick }: Sa
               </button>
             </div>
             
-            <div className="p-5 flex-1 relative flex flex-col min-h-[0px] overflow-hidden bg-base">
+            <div className="p-5 flex-1 relative flex flex-col min-h-0 overflow-hidden bg-base">
                <SaleDetailPanel sale={sale} onCancelClick={onCancelClick} />
             </div>
           </div>

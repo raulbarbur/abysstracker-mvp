@@ -69,7 +69,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
           }
         `}} />
         {/* Usamos pt-20 en móvil por la barra top fija de h-16 (4rem) + py */}
-        <main className="dynamic-ml-wrapper transition-all duration-200 ease-in-out w-full h-full px-4 md:px-6 pt-[calc(4rem+1.5rem)] md:pt-8 pb-6 md:pb-8 max-w-full overflow-x-hidden">
+        <main className="dynamic-ml-wrapper transition-all duration-200 ease-in-out w-full h-full px-4 md:px-6 pt-22 md:pt-8 pb-6 md:pb-8 max-w-full overflow-x-hidden">
           {children}
         </main>
       </div>
