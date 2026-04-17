@@ -33,11 +33,23 @@ export function PreferencesProvider({
     const root = document.documentElement;
     root.setAttribute("data-theme", t);
     root.className = t === 'dark' ? 'dark' : 'light';
+    // Persist cookie even when unauthenticated (login page)
+    fetch('/api/preferences/cookie', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ theme: t }),
+    }).catch(() => {});
   };
 
   const setFontSize = (fs: FontSizePreference) => {
     setFontSizeState(fs);
     document.documentElement.setAttribute("data-font-size", fs);
+    // Persist cookie even when unauthenticated (login page)
+    fetch('/api/preferences/cookie', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ fontSize: fs }),
+    }).catch(() => {});
   };
 
   const persistPreferences = async (overrides?: { theme?: ThemePreference; fontSize?: FontSizePreference }) => {
