@@ -10,7 +10,7 @@ interface ModalProps {
   title?: string;
   children: React.ReactNode;
   footer?: React.ReactNode;
-  maxWidth?: "sm" | "md" | "lg" | "xl" | "full";
+  maxWidth?: "sm" | "md" | "lg" | "xl" | "2xl" | "full";
 }
 
 export function Modal({ isOpen, onClose, title, children, footer, maxWidth = "md" }: ModalProps) {
@@ -38,10 +38,12 @@ export function Modal({ isOpen, onClose, title, children, footer, maxWidth = "md
     } else {
       document.body.style.overflow = "unset";
       document.body.classList.remove("dark");
+      document.body.removeAttribute("data-font-size");
     }
     return () => {
       document.body.style.overflow = "unset";
       document.body.classList.remove("dark");
+      document.body.removeAttribute("data-font-size");
     };
   }, [isOpen]);
 
@@ -52,6 +54,7 @@ export function Modal({ isOpen, onClose, title, children, footer, maxWidth = "md
     md: "max-w-md",
     lg: "max-w-lg",
     xl: "max-w-xl",
+    "2xl": "max-w-2xl",
     full: "max-w-[90vw]",
   };
 
