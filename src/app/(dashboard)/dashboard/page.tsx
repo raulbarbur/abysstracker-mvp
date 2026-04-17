@@ -34,7 +34,7 @@ const Sparkline = ({ type }: { type: 'primary' | 'success' | 'info' }) => {
 interface DashboardData {
   salesToday: { count: number; totalAmount: number };
   monthlyStats: { revenue: number; profit: number; count: number };
-  topVariants: { variantId: string; variantName: string; productName: string; totalQuantitySold: number }[];
+  topVariants: { variantId: string; variantName: string; productName: string; totalQuantitySold: number; netProfit: number }[];
   latestMovements: { id: string; type: string; quantity: number; variantName: string; productName: string; username: string; createdAt: string }[];
   lowStockAlerts: { variantId: string; variantName: string; productName: string; productId: string; currentStock: number; minimumStock: number }[];
 }
@@ -206,7 +206,10 @@ export default function DashboardIndexPage() {
         
         {/* CARD: TOP 5 VARIANTES (Movida abajo) */}
         <div className="bg-surface border border-border rounded-xl p-6 shadow-sm flex flex-col">
-          <h3 className="text-sm font-semibold text-text-secondary uppercase tracking-wider mb-5">Productos más vendidos</h3>
+          <div className="flex items-baseline justify-between mb-5">
+            <h3 className="text-sm font-semibold text-text-secondary uppercase tracking-wider">Productos más vendidos</h3>
+            <span className="text-xs font-medium text-text-disabled text-right leading-tight">unidades / ganancia<br/>este mes</span>
+          </div>
           {isLoading ? (
             <div className="flex flex-col gap-4">
               {[...Array(5)].map((_, i) => (
@@ -222,14 +225,17 @@ export default function DashboardIndexPage() {
             <div className="flex flex-col gap-4">
               {topVariants.slice(0, 5).map((v, i) => (
                 <div key={v.variantId} className="flex items-center justify-between group">
-                  <div className="flex items-center gap-3">
-                    <span className="text-text-disabled font-bold text-sm w-3 text-center group-hover:text-primary transition-colors">{i + 1}</span>
-                    <div className="flex flex-col">
+                  <div className="flex items-center gap-3 min-w-0">
+                    <span className="text-text-disabled font-bold text-sm w-3 text-center shrink-0 group-hover:text-primary transition-colors">{i + 1}</span>
+                    <div className="flex flex-col min-w-0">
                       <span className="text-sm font-bold text-text-primary leading-tight">{v.productName}</span>
                       <span className="text-xs text-text-secondary font-semibold uppercase tracking-wide truncate max-w-37.5">{v.variantName}</span>
                     </div>
                   </div>
-                  <span className="font-bold text-primary text-sm shrink-0 bg-primary/10 px-2 py-0.5 rounded-md">{v.totalQuantitySold}</span>
+                  <div className="flex flex-col items-end gap-0.5 shrink-0 ml-3">
+                    <span className="font-bold text-primary text-sm bg-primary/10 px-2 py-0.5 rounded-md">{v.totalQuantitySold} uds</span>
+                    <span className="text-xs font-bold text-success">+{formatMoney(v.netProfit)}</span>
+                  </div>
                 </div>
               ))}
             </div>

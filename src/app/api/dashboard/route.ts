@@ -31,13 +31,15 @@ export async function GET(request: NextRequest) {
         include: { saleLines: { include: { variant: true } } }
       }),
       // b) topVariants
-      prisma.$queryRaw<{variantId: string; variantName: string; productName: string; totalQuantitySold: unknown}[]>`
-        SELECT v.id as "variantId", v.name as "variantName", p.name as "productName", SUM(sl.quantity) as "totalQuantitySold"
+      prisma.$queryRaw<{variantId: string; variantName: string; productName: string; totalQuantitySold: unknown; netProfit: unknown}[]>`
+        SELECT v.id as "variantId", v.name as "variantName", p.name as "productName",
+               SUM(sl.quantity) as "totalQuantitySold",
+               SUM(sl.quantity * (sl."unitPrice" - v."costPrice")) as "netProfit"
         FROM "SaleLine" sl
         JOIN "Sale" s ON s.id = sl."saleId"
         JOIN "Variant" v ON v.id = sl."variantId"
         JOIN "Product" p ON p.id = v."productId"
-        WHERE s.status = 'ACTIVE' AND s.date >= ${sevenDaysAgo}
+        WHERE s.status = 'ACTIVE' AND s.date >= ${startOfMonth}
           AND v.active = true AND p.active = true
         GROUP BY v.id, v.name, p.name
         ORDER BY "totalQuantitySold" DESC
@@ -101,7 +103,8 @@ export async function GET(request: NextRequest) {
       variantId: r.variantId,
       variantName: r.variantName,
       productName: r.productName,
-      totalQuantitySold: Number(r.totalQuantitySold)
+      totalQuantitySold: Number(r.totalQuantitySold),
+      netProfit: Number(r.netProfit)
     }));
 
     const latestMovements = latestMovementsData.map((m) => ({
