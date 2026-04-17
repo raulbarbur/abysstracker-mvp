@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { AlertTriangle, Loader2, CheckCircle } from "lucide-react";
 import { Modal } from "@/components/ui/Modal";
 
@@ -19,7 +19,7 @@ export function CancelModal({ saleId, isOpen, onClose, onSuccess }: CancelModalP
   const isOverLimit = reason.length > 500;
   const isTooShort = reason.trim().length === 0;
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (isOpen) {
       setReason("");
       setStatus("idle");
