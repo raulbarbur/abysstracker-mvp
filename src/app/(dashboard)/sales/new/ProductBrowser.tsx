@@ -90,13 +90,13 @@ export function ProductBrowser({ onAddToCart, cartItems }: ProductBrowserProps) 
           }
         }}
         disabled={isOos}
-        className={`relative flex flex-col md:flex-row items-start md:items-center justify-between w-full p-4 md:p-5 rounded-2xl border text-left transition-all overflow-hidden group min-h-[120px] md:min-h-[100px] ${
+        className={`relative flex flex-col md:flex-row items-start md:items-center justify-between w-full p-4 md:p-5 rounded-2xl border text-left transition-all overflow-hidden group min-h-30 md:min-h-25 ${
           isOos 
             ? 'bg-base border-transparent opacity-50 cursor-not-allowed' 
             : 'bg-surface border-border hover:border-primary/50 hover:bg-hover cursor-pointer active:scale-[0.98] shadow-sm'
         }`}
       >
-        <div className="flex flex-col gap-1 pr-0 md:pr-14 mb-8 md:mb-0">
+        <div className="flex flex-col gap-1 w-full pr-0 md:pr-14 mb-8 md:mb-0">
           <span className="font-bold text-sm md:text-lg leading-tight text-text-primary group-hover:text-primary transition-colors">{variant.name}</span>
           <span className="text-xs md:text-sm font-semibold text-text-secondary uppercase tracking-wider">{product.name}</span>
           
@@ -112,7 +112,7 @@ export function ProductBrowser({ onAddToCart, cartItems }: ProductBrowserProps) 
 
         {/* Floating Add icon */}
         <div className={`absolute right-3 bottom-3 md:right-5 md:top-1/2 md:-translate-y-1/2 w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center transition-all ${isOos ? 'bg-base text-text-disabled' : isAdded ? 'bg-success/20 text-success scale-110' : 'bg-primary/10 text-primary group-hover:bg-primary group-hover:text-white group-active:scale-95 shadow-sm'}`}>
-           {isAdded ? <Check size={20} className="md:w-[24px] md:h-[24px]" /> : <Plus size={20} className="md:w-[24px] md:h-[24px]" />}
+           {isAdded ? <Check size={20} className="md:w-6 md:h-6" /> : <Plus size={20} className="md:w-6 md:h-6" />}
         </div>
       </button>
     );
@@ -131,7 +131,7 @@ export function ProductBrowser({ onAddToCart, cartItems }: ProductBrowserProps) 
     <div className="w-full h-full flex flex-col bg-surface lg:bg-base lg:rounded-2xl overflow-hidden lg:shadow-md lg:border border-border">
       <div className="flex-1 overflow-y-auto custom-scrollbar p-4 md:p-6 relative bg-base">
         <div className="space-y-6">
-          <div className="relative sticky top-0 z-10">
+          <div className="sticky top-0 z-10">
             <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-text-secondary" size={24} />
             <input 
               type="text" 
@@ -194,7 +194,7 @@ export function ProductBrowser({ onAddToCart, cartItems }: ProductBrowserProps) 
                     <div key={product.id} className="bg-surface rounded-2xl overflow-hidden border border-border shadow-sm transition-all focus-within:ring-2 ring-primary/30">
                       <button
                         onClick={() => setExpandedProduct(isExpanded ? null : product.id)}
-                        className={`w-full p-5 md:p-6 flex items-center justify-between font-black text-lg md:text-xl hover:bg-hover active:bg-elevated transition-colors outline-none ${isExpanded ? 'bg-elevated text-primary border-b border-border' : 'text-text-primary'}`}
+                        className={`w-full p-5 md:p-6 flex items-center justify-between font-black text-lg md:text-xl hover:bg-hover active:bg-elevated transition-colors outline-none text-left ${isExpanded ? 'bg-elevated text-primary border-b border-border' : 'text-text-primary'}`}
                       >
                         <span>{product.name}</span>
                         <span className="text-sm font-bold px-4 py-1.5 bg-base border border-border rounded-xl text-text-secondary shadow-sm hidden md:block">

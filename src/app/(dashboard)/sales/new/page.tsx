@@ -66,7 +66,7 @@ export default function NewSalePage() {
       </div>
 
       {/* Right Area / Bottom Sheet: Cart */}
-      <div className="lg:w-[380px] xl:w-[420px] 2xl:w-[30%] flex-shrink-0 lg:h-[calc(100vh-6rem)]">
+      <div className="lg:w-95 xl:w-105 2xl:w-[30%] shrink-0 lg:h-[calc(100vh-6rem)]">
         <CartPanel 
           cartItems={cartItems}
           updateQuantity={updateQuantity}

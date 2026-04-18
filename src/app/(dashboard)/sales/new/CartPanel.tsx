@@ -29,7 +29,7 @@ export function CartPanel({ cartItems, updateQuantity, subtotal, onConfirmClick 
       <div className={`
         fixed lg:static left-0 bottom-0 w-full lg:w-full bg-surface border-t lg:border border-border 
         lg:rounded-2xl transition-all duration-300 z-50 lg:z-auto flex flex-col shadow-[0_-10px_40px_rgba(0,0,0,0.1)] lg:shadow-xl
-        ${isExpandedMobile ? 'h-[85vh] rounded-t-3xl' : 'h-[5rem] lg:h-full'}
+        ${isExpandedMobile ? 'h-[85vh] rounded-t-3xl' : 'h-20 lg:h-full'}
       `}>
         {/* Mobile Header (toggles expansion) */}
         <div 
@@ -80,16 +80,14 @@ export function CartPanel({ cartItems, updateQuantity, subtotal, onConfirmClick 
             <div className="space-y-3">
               {cartItems.map((item) => (
                 <div key={item.variantId} className="flex flex-col bg-elevated px-5 py-4 rounded-xl border border-border">
-                  <div className="flex justify-between items-start mb-3">
-                    <div className="flex flex-col pr-4">
-                      <span className="font-bold text-md break-words leading-tight">{item.productName}</span>
-                      <span className="text-xs text-text-secondary break-words line-clamp-2 font-semibold uppercase">{item.variantName}</span>
-                    </div>
+                  <div className="flex flex-col mb-3">
+                    <span className="font-bold text-md wrap-break-word leading-tight text-left">{item.productName}</span>
+                    <span className="text-xs text-text-secondary wrap-break-word line-clamp-2 font-semibold uppercase text-left">{item.variantName}</span>
+                  </div>
+                  <div className="flex items-center justify-between border-t border-border pt-3">
                     <span className="font-black text-md text-primary bg-primary/10 px-2 py-1 rounded-md">
                       ${(item.unitPrice * item.quantity).toLocaleString('es-AR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
                     </span>
-                  </div>
-                  <div className="flex items-center justify-between border-t border-border pt-3">
                     <span className="text-xs text-text-secondary font-medium">${item.unitPrice.toLocaleString('es-AR', {minimumFractionDigits: 2, maximumFractionDigits: 2})} c/u</span>
                     
                     <div className="flex items-center bg-surface border border-border rounded-lg overflow-hidden shadow-sm">
@@ -99,7 +97,7 @@ export function CartPanel({ cartItems, updateQuantity, subtotal, onConfirmClick 
                       >
                          − 
                       </button>
-                      <span className="px-4 py-2 min-w-[3rem] text-center font-bold text-sm bg-base border-x border-border">
+                      <span className="px-4 py-2 min-w-12 text-center font-bold text-sm bg-base border-x border-border">
                         {item.quantity}
                       </span>
                       <button 
@@ -132,7 +130,7 @@ export function CartPanel({ cartItems, updateQuantity, subtotal, onConfirmClick 
                }
             }}
             disabled={cartItems.length === 0}
-            className="w-full min-h-[56px] rounded-xl bg-primary hover:bg-primary-hover active:bg-primary-active text-white text-lg font-black shadow-lg shadow-primary/20 transition-all disabled:opacity-50 disabled:pointer-events-none flex justify-center items-center gap-3 active:scale-[0.98]"
+            className="w-full min-h-14 rounded-xl bg-primary hover:bg-primary-hover active:bg-primary-active text-white text-lg font-black shadow-lg shadow-primary/20 transition-all disabled:opacity-50 disabled:pointer-events-none flex justify-center items-center gap-3 active:scale-[0.98]"
           >
              <CheckCircle size={24} />
              Confirmar Venta

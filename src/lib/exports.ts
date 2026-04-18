@@ -36,9 +36,10 @@ export async function generateSalesExport(filters: { dateFrom?: string; dateTo?:
         'Comprobante': sale.invoice?.invoiceNumber || 'S/N',
         'Fecha': formatDate(sale.date),
         'Estado': sale.status === 'ACTIVE' ? 'Activa' : 'Anulada',
+        'Pago': sale.paymentMethod === 'CASH' ? 'Efectivo' : sale.paymentMethod === 'TRANSFER' ? 'Transferencia' : '',
         'Usuario': sale.user.username,
-        'Variante': line.variant.name,
         'Producto': line.variant.product.name,
+        'Variante': line.variant.name,
         'Cantidad': line.quantity,
         'Precio Unitario': Number(line.unitPrice),
         'Subtotal': Number(line.unitPrice) * line.quantity
@@ -104,16 +105,16 @@ export async function generateMovementsExport(filters: { dateFrom?: string; date
     hour: '2-digit', minute: '2-digit', hour12: false
   }).format(d);
 
-  const movementLabels: Record<string, string> = {
-    'IN': 'Entrada',
-    'OUT': 'Salida',
-    'ADJUSTMENT': 'Ajuste',
-    'LOSS': 'Pérdida'
+  const getMovementLabel = (type: string, referenceType: string | null) => {
+    if (type === 'OUT' && referenceType === 'SALE') return 'Venta';
+    if (type === 'IN' && referenceType === 'SALE_CANCELLATION') return 'Reposición por anulación';
+    const labels: Record<string, string> = { IN: 'Entrada', OUT: 'Salida', ADJUSTMENT: 'Ajuste', LOSS: 'Pérdida' };
+    return labels[type] || type;
   };
 
   const rows = movements.map(m => ({
     'Fecha': formatDate(m.createdAt),
-    'Tipo': movementLabels[m.type] || m.type,
+    'Tipo': getMovementLabel(m.type, m.referenceType ?? null),
     'Cantidad': m.quantity,
     'Producto': m.variant.product.name,
     'Variante': m.variant.name,

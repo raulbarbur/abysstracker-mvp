@@ -352,21 +352,19 @@ export default function DashboardIndexPage() {
                 } 
                 
                 return (
-                  <div key={m.id} className="flex items-center justify-between border-b border-border/50 pb-3 last:border-0 last:pb-0 group">
-                    <div className="flex items-center gap-3">
-                      <span className={`inline-flex items-center px-2 py-1 rounded-lg border text-xs uppercase font-black tracking-widest shrink-0 ${badgeClass}`}>
-                        {typeLabel}
-                      </span>
-                      <div className="flex flex-col min-w-0">
-                        <span className="text-sm font-bold text-text-primary leading-tight group-hover:text-primary transition-colors truncate">{m.productName}</span>
-                        <div className="flex items-center gap-1.5 mt-0.5">
-                          <span className={`text-xs text-text-secondary font-semibold uppercase tracking-wide truncate max-w-25`}>{m.variantName}</span>
-                          <span className={`text-xs font-black tabular-nums ${qtyClass}`}>{sign}{m.quantity}</span>
-                          <span className="text-xs text-text-secondary truncate"><span className="text-text-disabled mx-0.5">•</span> por <span className="font-medium text-text-primary/70">{m.username}</span></span>
-                        </div>
+                  <div key={m.id} className="flex items-center gap-3 border-b border-border/50 pb-3 last:border-0 last:pb-0 group">
+                    <span className={`inline-flex items-center px-2 py-1 rounded-lg border text-xs uppercase font-black tracking-widest shrink-0 ${badgeClass}`}>
+                      {typeLabel}
+                    </span>
+                    <div className="flex flex-col min-w-0">
+                      <span className="text-sm font-bold text-text-primary leading-tight group-hover:text-primary transition-colors truncate">{m.productName}</span>
+                      <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
+                        <span className="text-xs text-text-secondary font-semibold uppercase tracking-wide">{m.variantName}</span>
+                        <span className={`text-xs font-black tabular-nums ${qtyClass}`}>{sign}{m.quantity}</span>
+                        <span className="text-xs text-text-secondary"><span className="text-text-disabled mx-0.5">•</span> por <span className="font-medium text-text-primary/70">{m.username}</span></span>
+                        <span className="text-xs font-medium text-text-disabled whitespace-nowrap">{getRelativeTime(m.createdAt)}</span>
                       </div>
                     </div>
-                    <span className="hidden sm:inline-flex text-xs font-medium text-text-secondary shrink-0 bg-base border border-border/50 px-2 py-1 rounded-md ml-2">{getRelativeTime(m.createdAt)}</span>
                   </div>
                 );
               })}
